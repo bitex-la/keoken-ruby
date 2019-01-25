@@ -1,5 +1,3 @@
-require 'extensions/bitcoin/script'
-
 module Keoken
   module Transaction
     class Token

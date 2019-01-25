@@ -4,7 +4,7 @@ require 'net/http'
 module Keoken
   module Bitprim
     class Transaction
-      attr_writer :raw
+      attr_reader :raw
 
       def initialize(raw)
         @raw = raw

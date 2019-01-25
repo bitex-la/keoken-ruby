@@ -1,3 +1,7 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'keoken/version'
+
 Gem::Specification.new do |s|
   s.name          = 'keoken'
   s.version       = Keoken::VERSION
@@ -12,4 +16,10 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
 
   s.add_dependency 'bitcoin-ruby', '~> 0.0.18'
+
+  s.add_development_dependency "bundler", "~> 1.11"
+  s.add_development_dependency "rake", "~> 12"
+  s.add_development_dependency "rspec", "~> 3"
+  s.add_development_dependency "webmock", "~> 2.3"
+  s.add_development_dependency "byebug", "~> 10"
 end
