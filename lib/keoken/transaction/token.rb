@@ -1,12 +1,14 @@
 module Keoken
   module Transaction
     class Token
+      attr_accessor :to_json, :raw
       extend Bitcoin::Builder
 
-      def self.create(tx_id, position, script, input_amount, output_amount, key)
-        build_tx do |t|
+      def self.create(tx_id, position, input_script, input_amount, output_amount, key, script)
+        token = self.new
+        tx = build_tx do |t|
           t.input do |i| 
-            i.prev_out(tx_id, position, script.htb, input_amount, 0)
+            i.prev_out(tx_id, position, input_script.htb, input_amount, 0)
             i.signature_key(key)
           end
           t.output do |o|
@@ -20,10 +22,14 @@ module Keoken
             o.to(script, :custom)
           end
         end
+        token.to_json = tx.to_json
+        token.raw = tx.to_payload.bth
+        token
       end
 
-      def self.send(tx_id, position, script, input_amount, output_amount, output_amount_to_addr2, key)
-        build_tx do |t|
+      def self.send_amount(tx_id, position, input_script, input_amount, output_amount, output_amount_to_addr2, key, script)
+        token = self.new
+        tx = build_tx do |t|
           t.input do |i| 
             i.prev_out(tx_id, position, script.htb, input_amount, 0)
             i.signature_key(key)
@@ -45,6 +51,9 @@ module Keoken
             o.to(script, :custom)
           end
         end
+        token.to_json = tx.to_json
+        token.raw = tx.to_payload.bth
+        token
       end
     end
   end
