@@ -1,0 +1,7 @@
+Bitprim:
+  node:
+    testnet:
+      url: https://tbch.blockdozer.com/insight-api/
+    mainnet:
+      url: https://bch.blockdozer.com/insight-api/
+
