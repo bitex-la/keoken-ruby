@@ -147,7 +147,6 @@ describe Keoken do
 
     it 'raw transaction' do
       raw = @transaction_token.raw
-      puts raw
       expect(raw).to start_with('01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000')
       expect(raw).to end_with('6a0400004b50100000000100000021000000000050000000000000')
     end
