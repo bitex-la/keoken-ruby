@@ -43,7 +43,7 @@ describe Keoken do
     )
   end
 
-  describe 'creates bitcoin transaction' do
+  describe 'creates token' do
     before(:each) do
       Bitcoin.network = :testnet3
       token = Keoken::Token.new(name: 'test-keoken')

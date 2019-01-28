@@ -30,7 +30,7 @@ module Keoken
       def self.send_amount(tx_id, position, input_script, input_amount, output_amount, output_amount_to_addr2, key, script)
         token = self.new
         tx = build_tx do |t|
-          t.input do |i| 
+          t.input do |i|
             i.prev_out(tx_id, position, script.htb, input_amount, 0)
             i.signature_key(key)
           end
