@@ -97,4 +97,59 @@ describe Keoken do
       expect(transaction.send_tx).to be_nil
     end
   end
+
+  describe 'send money token' do
+    before(:each) do
+      Bitcoin.network = :testnet3
+      token = Keoken::Token.new(id: 21)
+      token.send_amount(500_000)
+      tx_id = 'aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e'
+      input_script = '76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac'
+      position = 0
+      script = token.hex
+      input_amount = 5_0000_0000
+      output_amount = 4_9991_0000
+      output_amount_address = 20_000
+      output_address = 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi'
+      key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
+      @transaction_token = Keoken::Transaction::Token.send_amount(tx_id,
+                                                                  position,
+                                                                  input_script,
+                                                                  input_amount,
+                                                                  output_amount,
+                                                                  output_amount_address,
+                                                                  output_address,
+                                                                  key,
+                                                                  script)
+    end
+
+    it 'format to_json' do
+      json = JSON.parse(@transaction_token.to_json)
+      expect(json['out']).to(
+        eq(
+          [
+            {
+              "value" => "0.00020000",
+              "scriptPubKey" => "OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG"
+            },
+            {
+              "value"=>"4.99910000",
+              "scriptPubKey"=> "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG"
+            },
+            {
+              "value" => "0.00000000",
+              "scriptPubKey" => "OP_RETURN 00004b50 00000001000000210000000000500000"
+            }
+          ]
+        )
+      )
+    end
+
+    it 'raw transaction' do
+      raw = @transaction_token.raw
+      puts raw
+      expect(raw).to start_with('01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000')
+      expect(raw).to end_with('6a0400004b50100000000100000021000000000050000000000000')
+    end
+  end
 end
