@@ -81,5 +81,20 @@ describe Keoken do
       expect(raw).to start_with('01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000')
       expect(raw).to end_with('6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000')
     end
+
+    it 'broadcast transaction' do
+      stub_request(:post, 'http://tbch.blockdozer.com:443/insight-api/tx/send')
+        .with(:body => {"rawtx"=> /01000000016ef955ef813fd167438ef35d862d9dcb/},
+            headers: {
+              'Accept' => '*/*',
+              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Content-Type' => 'application/x-www-form-urlencoded',
+              'Host' => 'tbch.blockdozer.com',
+              'User-Agent' => 'Ruby'
+            })
+        .to_return(status: 200, body: '', headers: {})
+      transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
+      expect(transaction.send_tx).to be_nil
+    end
   end
 end
