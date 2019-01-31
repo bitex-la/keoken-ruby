@@ -1,0 +1,8 @@
+lib/keoken.rb 537b2d6442b484c3024f7c6a3f903fec095025a5
+lib/keoken/token.rb 1204d627b643384052f696df698aeb110786f0ed
+lib/keoken/version.rb 31037dd2940f59d125e4d2a39a5c6f3f0b799138
+lib/keoken/bitprim/transaction.rb 4eaa63ae0a2346d5847944516b07b670f0faab3c
+lib/keoken/errors/id_not_found.rb 45dfceaab128e711ab1f277b82d09cc48170ab5b
+lib/keoken/errors/name_not_found.rb 301c119c6dc84db6f063897a65a4a4c1ceb0a230
+lib/keoken/extensions/bitcoin/script.rb 16430adf292ff593b004914854759677653cd751
+lib/keoken/backend/bitcoin_ruby/transaction.rb d16b0fc2ef333153f704cf351b64fb2f1bf237fe

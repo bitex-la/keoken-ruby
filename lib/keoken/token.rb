@@ -2,11 +2,23 @@ module Keoken
   class Token
     attr_accessor :hex, :name, :id
 
+    # Creates a new token object.
+    #
+    # @param options [Hash] options parameters to create the token.
+    # @option options [String] :name The name of token to create.
+    # @option options [Number] :id The id of token to obtain an amount to send to another address.
+    #
     def initialize(options = {})
       @name = options[:name]
       @id = options[:id]
     end
 
+    # Generate the script to create a token.
+    #
+    # @param amount [Number] The token amount limit.
+    #
+    # @return [Keoken::Token] An object with the data needed to crate the token.
+    #
     def create(amount)
       raise Keoken::NameNotFound unless @name
       data_script =
@@ -23,6 +35,12 @@ module Keoken
       self
     end
 
+    # Generate the script to send an amount from one address to another.
+    #
+    # @param amount [Number] The amount to send.
+    #
+    # @return [Keoken::Token] An object with the data needed to send the amount.
+    #
     def send_amount(amount)
       raise Keoken::IdNotFound unless @id
       data_script =

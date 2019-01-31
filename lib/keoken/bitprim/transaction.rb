@@ -5,6 +5,12 @@ require 'net/http'
 module Keoken
   module Bitprim
     class Transaction
+      # Broadcast a raw transaction.
+      #
+      # @param raw [String] The raw transaction.
+      #
+      # @return [String] Value from response.
+      #
       def send_tx(raw)
         uri = URI("#{root_node_url}/tx/send")
         request = Net::HTTP::Post.new(uri)
@@ -17,6 +23,12 @@ module Keoken
         response.value
       end
 
+      # Get tokens from address.
+      #
+      # @param address [String] The address that contains the tokens.
+      #
+      # @return [Array] Detailed info from tokens associated to the address.
+      #
       def get_assets_by_address(address)
         uri = URI("#{root_keoken_url}/get_assets_by_address")
         params = { address: address }

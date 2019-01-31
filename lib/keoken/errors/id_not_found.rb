@@ -1,6 +1,6 @@
 module Keoken
   class IdNotFound < StandardError
-    def initialize(msg='Missing id')
+    def initialize(msg = 'Missing id')
       super
     end
   end
