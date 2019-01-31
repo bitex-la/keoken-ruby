@@ -1,11 +1,11 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Keoken do
-  it 'has a version number' do
+  it "has a version number" do
     expect(Keoken::VERSION).not_to be nil
   end
 
-  it 'defines keoken constants' do
+  it "defines keoken constants" do
     expect(Keoken::PREFIX_SIZE).not_to be nil
     expect(Keoken::PREFIX).not_to be nil
     expect(Keoken::VERSION_NODE).not_to be nil
@@ -17,170 +17,171 @@ describe Keoken do
     expect(Keoken::ASSET_ID_SIZE).not_to be nil
   end
 
-  it 'creates the test-keoken token' do
-    token = Keoken::Token.new(name: 'test-keoken')
+  it "creates the test-keoken token" do
+    token = Keoken::Token.new(name: "test-keoken")
     token.create(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+      eq("6a0400004b501800000000746573742d6b656f6b656e000000000001000000")
     )
   end
 
-  it 'raise an error when name is not provided' do
+  it "raise an error when name is not provided" do
     token = Keoken::Token.new
     expect { token.create(1_000_000) }.to raise_error(Keoken::NameNotFound)
   end
 
-  it 'raise an error when id is not provided' do
+  it "raise an error when id is not provided" do
     token = Keoken::Token.new
     expect { token.send_amount(1_000_000) }.to raise_error(Keoken::IdNotFound)
   end
 
-  it 'send 1_000_000 to token with 34 id' do
+  it "send 1_000_000 to token with 34 id" do
     token = Keoken::Token.new(id: 34)
     token.send_amount(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b501000000001000000340000000001000000')
+      eq("6a0400004b501000000001000000340000000001000000")
     )
   end
 
-  describe 'creates token' do
+  describe "creates token" do
     before(:each) do
       Bitcoin.network = :testnet3
-      token = Keoken::Token.new(name: 'test-keoken')
+      token = Keoken::Token.new(name: "test-keoken")
       token.create(1_000_000)
-      tx_id = 'aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e'
-      input_script = '76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac'
+      tx_id = "aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e"
+      input_script = "76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac"
       position = 0
       script = token.hex
       input_amount = 5_0000_0000
       output_amount = 4_9991_0000
       key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
-      @transaction_token = Keoken::Transaction::Token.create(tx_id, position, input_script, input_amount, output_amount, key, script)
+
+      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.create(tx_id, position, input_script, input_amount, output_amount, key, script)
     end
 
-    it 'format to_json' do
+    it "format to_json" do
       json = JSON.parse(@transaction_token.to_json)
-      expect(json['out']).to(
+      expect(json["out"]).to(
         eq(
           [
             {
               "value" => "4.99910000",
-              "scriptPubKey" => "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG"
+              "scriptPubKey" => "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG",
             },
             {
               "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e000000000001000000"
-            }
+              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e000000000001000000",
+            },
           ]
         )
       )
     end
 
-    it 'raw transaction' do
+    it "raw transaction" do
       raw = @transaction_token.raw
-      expect(raw).to start_with('01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000')
-      expect(raw).to end_with('6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000')
+      expect(raw).to start_with("01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000")
+      expect(raw).to end_with("6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000")
     end
 
-    it 'broadcast transaction' do
-      stub_request(:post, 'http://tbch.blockdozer.com:443/insight-api/tx/send')
-        .with(:body => {"rawtx"=> /01000000016ef955ef813fd167438ef35d862d9dcb/},
-            headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Content-Type' => 'application/x-www-form-urlencoded',
-              'Host' => 'tbch.blockdozer.com',
-              'User-Agent' => 'Ruby'
-            })
-        .to_return(status: 200, body: '', headers: {})
+    it "broadcast transaction" do
+      stub_request(:post, "http://tbch.blockdozer.com:443/insight-api/tx/send")
+        .with(:body => {"rawtx" => /01000000016ef955ef813fd167438ef35d862d9dcb/},
+              headers: {
+                "Accept" => "*/*",
+                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Content-Type" => "application/x-www-form-urlencoded",
+                "Host" => "tbch.blockdozer.com",
+                "User-Agent" => "Ruby",
+              })
+        .to_return(status: 200, body: "", headers: {})
       transaction = Keoken::Bitprim::Transaction.new
       expect(transaction.send_tx(@transaction_token.raw)).to be_nil
     end
   end
 
-  describe 'send money token' do
+  describe "send money token" do
     before(:each) do
       Bitcoin.network = :testnet3
       token = Keoken::Token.new(id: 21)
       token.send_amount(500_000)
-      tx_id = 'aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e'
-      input_script = '76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac'
+      tx_id = "aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e"
+      input_script = "76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac"
       position = 0
       script = token.hex
       input_amount = 5_0000_0000
       output_amount = 4_9991_0000
       output_amount_address = 20_000
-      output_address = 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi'
+      output_address = "mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi"
       key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
-      @transaction_token = Keoken::Transaction::Token.send_amount(tx_id,
-                                                                  position,
-                                                                  input_script,
-                                                                  input_amount,
-                                                                  output_amount,
-                                                                  output_amount_address,
-                                                                  output_address,
-                                                                  key,
-                                                                  script)
+      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.send_amount(tx_id,
+                                                                                 position,
+                                                                                 input_script,
+                                                                                 input_amount,
+                                                                                 output_amount,
+                                                                                 output_amount_address,
+                                                                                 output_address,
+                                                                                 key,
+                                                                                 script)
     end
 
-    it 'format to_json' do
+    it "format to_json" do
       json = JSON.parse(@transaction_token.to_json)
-      expect(json['out']).to(
+      expect(json["out"]).to(
         eq(
           [
             {
               "value" => "0.00020000",
-              "scriptPubKey" => "OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG"
+              "scriptPubKey" => "OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG",
             },
             {
-              "value"=>"4.99910000",
-              "scriptPubKey"=> "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG"
+              "value" => "4.99910000",
+              "scriptPubKey" => "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG",
             },
             {
               "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 00000001000000210000000000500000"
-            }
+              "scriptPubKey" => "OP_RETURN 00004b50 00000001000000210000000000500000",
+            },
           ]
         )
       )
     end
 
-    it 'raw transaction' do
+    it "raw transaction" do
       raw = @transaction_token.raw
-      expect(raw).to start_with('01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000')
-      expect(raw).to end_with('6a0400004b50100000000100000021000000000050000000000000')
+      expect(raw).to start_with("01000000016ef955ef813fd167438ef35d862d9dcb299672b22ccbc20da598f5ddc59d69aa00000000")
+      expect(raw).to end_with("6a0400004b50100000000100000021000000000050000000000000")
     end
   end
 
-  describe 'get assets' do
+  describe "get assets" do
     before(:each) do
       Bitcoin.network = :testnet3
     end
 
-    it 'get assets by address mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi' do
+    it "get assets by address mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi" do
       body_response = "[{'amount': 100000, 'asset_creator': 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', 'asset_id': 123, 'asset_name': 'keoken-token'}]"
-      stub_request(:get, 'https://explorer.testnet.keoken.io/api/get_assets_by_address?address=mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi')
+      stub_request(:get, "https://explorer.testnet.keoken.io/api/get_assets_by_address?address=mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi")
         .with(
           headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Host' => 'explorer.testnet.keoken.io',
-            'User-Agent' => 'Ruby'
-          }
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Host" => "explorer.testnet.keoken.io",
+            "User-Agent" => "Ruby",
+          },
         )
         .to_return(status: 200, body: body_response, headers: {})
 
       transaction = Keoken::Bitprim::Transaction.new
-      assets = transaction.get_assets_by_address('mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi')
+      assets = transaction.get_assets_by_address("mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi")
 
       expect(assets).to eq(
         [
           {
-            'amount' => 100_000,
-            'asset_creator' => 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi',
-            'asset_id' => 123,
-            'asset_name' => 'keoken-token'
-          }
+            "amount" => 100_000,
+            "asset_creator" => "mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi",
+            "asset_id" => 123,
+            "asset_name" => "keoken-token",
+          },
         ]
       )
     end

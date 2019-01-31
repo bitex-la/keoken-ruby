@@ -2,7 +2,7 @@ require 'bitcoin'
 
 require 'keoken/extensions/bitcoin/script'
 require 'keoken/token'
-require 'keoken/transaction/token'
+require 'keoken/backend/bitcoin_ruby/transaction'
 require 'keoken/bitprim/transaction'
 require 'keoken/errors/id_not_found'
 require 'keoken/errors/name_not_found'
