@@ -151,4 +151,38 @@ describe Keoken do
       expect(raw).to end_with('6a0400004b50100000000100000021000000000050000000000000')
     end
   end
+
+  describe 'get assets' do
+    before(:each) do
+      Bitcoin.network = :testnet3
+    end
+
+    it 'get assets by address mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi' do
+      body_response = "[{'amount': 100000, 'asset_creator': 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', 'asset_id': 123, 'asset_name': 'keoken-token'}]"
+      stub_request(:get, 'https://explorer.testnet.keoken.io/api/get_assets_by_address?address=mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi')
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Host' => 'explorer.testnet.keoken.io',
+            'User-Agent' => 'Ruby'
+          }
+        )
+        .to_return(status: 200, body: body_response, headers: {})
+
+      transaction = Keoken::Bitprim::Transaction.new
+      assets = transaction.get_assets_by_address('mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi')
+
+      expect(assets).to eq(
+        [
+          {
+            'amount' => 100_000,
+            'asset_creator' => 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi',
+            'asset_id' => 123,
+            'asset_name' => 'keoken-token'
+          }
+        ]
+      )
+    end
+  end
 end

@@ -1,3 +1,4 @@
+require 'json'
 require 'yaml'
 require 'net/http'
 
@@ -5,28 +6,24 @@ module Keoken
   module Bitprim
     class Transaction
       def send_tx(raw)
-        uri = URI("#{root_node_url}tx/send")
-        req = Net::HTTP::Post.new(uri)
-        req.set_form_data(rawtx: raw)
+        uri = URI("#{root_node_url}/tx/send")
+        request = Net::HTTP::Post.new(uri)
+        request.set_form_data(rawtx: raw)
 
-        res = Net::HTTP.start(uri.hostname, uri.port) do |http|
-          http.request(req)
+        response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+          http.request(request)
         end
 
-        return res.value if res != Net::HTTPSuccess
+        response.value
       end
 
       def get_assets_by_address(address)
-        uri = URI(root_keoken_url)
+        uri = URI("#{root_keoken_url}/get_assets_by_address")
         params = { address: address }
-        request = Net::HTTP::Get.new(uri)
         uri.query = URI.encode_www_form(params)
+        response = Net::HTTP.get_response(uri)
 
-        res = Net::HTTP.start(uri.host, uri.port) do |http|
-          http.request request
-        end
-
-        res.body
+        JSON.parse(response.body.tr('\'', '"'))
       end
 
       private

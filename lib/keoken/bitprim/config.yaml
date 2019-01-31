@@ -1,9 +1,9 @@
 Bitprim:
   node:
     testnet:
-      url: https://tbch.blockdozer.com/insight-api/
+      url: https://tbch.blockdozer.com/insight-api
     mainnet:
-      url: https://bch.blockdozer.com/insight-api/
+      url: https://bch.blockdozer.com/insight-api
   keoken:
     testnet:
       url: https://explorer.testnet.keoken.io/api
