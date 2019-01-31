@@ -24,13 +24,13 @@ Or install it yourself as:
 
 ### Create token and send it to the blockchain
 
-```ruby      
+```ruby
 # It uses bitcoin-ruby, but you can use Trezor or Electrum, the most important command is the script,
-# which you can obtain with token.hex, 
+# which you can obtain with token.hex,
 # then you can send it as an output with a scriptPubKey and a value of 0.
 # In order to crate a token you need two outputs,
-# the change address with an amount less than original (for fees) 
-# and the other one for the script. To send money you need three outputs, 
+# the change address with an amount less than original (for fees)
+# and the other one for the script. To send money you need three outputs,
 # the change address, the address who owns the recipient token and the script.
 
 Bitcoin.network = :testnet3
@@ -43,20 +43,20 @@ script = token.hex
 input_amount = 5_0000_0000
 output_amount = 4_9991_0000
 key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
-@transaction_token = Keoken::Transaction::Token.create(tx_id,
-                                                       position,
-                                                       input_script,
-                                                       input_amount,
-                                                       output_amount,
-                                                       key,
-                                                       script)
+@transaction_token = Keoken::Backend::BitcoinRuby::Transaction.create(tx_id,
+                                                                      position,
+                                                                      input_script,
+                                                                      input_amount,
+                                                                      output_amount,
+                                                                      key,
+                                                                      script)
 transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
 transaction.send_tx
 ```
 
 ### Send token money and send transaction to the blockchain
 
-```ruby      
+```ruby
 Bitcoin.network = :testnet3
 transaction = Keoken::Bitprim::Transaction.new
 data = transaction.get_assets_by_address('mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDAs')
@@ -71,24 +71,22 @@ output_amount = 4_9991_0000
 output_amount_address = 20_000
 output_address = 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi'
 key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
-@transaction_token = Keoken::Transaction::Token.send_amount(tx_id,
-                                                            position,
-                                                            input_script,
-                                                            input_amount,
-                                                            output_amount,
-                                                            output_amount_address,
-                                                            output_address,
-                                                            key,
-                                                            script)
+@transaction_token = Keoken::Backend::BitcoinRuby::Transaction.send_amount(tx_id,
+                                                                           position,
+                                                                           input_script,
+                                                                           input_amount,
+                                                                           output_amount,
+                                                                           output_amount_address,
+                                                                           output_address,
+                                                                           key,
+                                                                           script)
 transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
 transaction.send_tx
 ```
 
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/bitex-la/keoken-ruby.
-
 
 ## License
 
