@@ -1,4 +1,4 @@
-# Keoken [![Build Status](https://travis-ci.org/bitex-la/keoken-ruby.svg?branch=master)](https://travis-ci.org/bitex-la/keoken-ruby)
+# Keoken [![Build Status](https://travis-ci.org/bitex-la/keoken-ruby.svg?branch=master)](https://travis-ci.org/bitex-la/keoken-ruby) [![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](https://www.rubydoc.info/github/bitex-la/keoken-ruby/master)
 
 Creates BCH tokens and send money between them for the Keoken protocol.
 
