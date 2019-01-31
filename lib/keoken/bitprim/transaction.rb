@@ -4,16 +4,10 @@ require 'net/http'
 module Keoken
   module Bitprim
     class Transaction
-      attr_reader :raw
-
-      def initialize(raw)
-        @raw = raw
-      end
-
-      def send_tx
+      def send_tx(raw)
         uri = URI("#{root_node_url}tx/send")
         req = Net::HTTP::Post.new(uri)
-        req.set_form_data(rawtx: @raw)
+        req.set_form_data(rawtx: raw)
 
         res = Net::HTTP.start(uri.hostname, uri.port) do |http|
           http.request(req)

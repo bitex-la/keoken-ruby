@@ -40,8 +40,8 @@ input_amount = 5_0000_0000
 output_amount = 4_9991_0000
 key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
 @transaction_token = Keoken::Transaction::Token.create(tx_id, position, input_script, input_amount, output_amount, key, script)
-transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
-transaction.send_tx
+transaction = Keoken::Bitprim::Transaction.new
+transaction.send_tx(@transaction_token.raw)
 ```
 
 

@@ -93,8 +93,8 @@ describe Keoken do
               'User-Agent' => 'Ruby'
             })
         .to_return(status: 200, body: '', headers: {})
-      transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
-      expect(transaction.send_tx).to be_nil
+      transaction = Keoken::Bitprim::Transaction.new
+      expect(transaction.send_tx(@transaction_token.raw)).to be_nil
     end
   end
 
