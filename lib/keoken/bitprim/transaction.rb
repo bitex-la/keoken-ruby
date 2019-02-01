@@ -13,14 +13,14 @@ module Keoken
       #
       def send_tx(raw)
         uri = URI("#{root_node_url}/tx/send")
-        request = Net::HTTP::Post.new(uri)
-        request.set_form_data(rawtx: raw)
+        response = Net::HTTP.post_form(uri, 'rawtx' => raw)
 
-        response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-          http.request(request)
+        case response
+        when Net::HTTPSuccess then
+          JSON.parse(response.body)
+        else
+          response.body
         end
-
-        response.value
       end
 
       # Get tokens from address.
@@ -29,13 +29,35 @@ module Keoken
       #
       # @return [Array] Detailed info from tokens associated to the address.
       #
-      def get_assets_by_address(address)
+      def assets_by_address(address)
         uri = URI("#{root_keoken_url}/get_assets_by_address")
         params = { address: address }
         uri.query = URI.encode_www_form(params)
         response = Net::HTTP.get_response(uri)
 
         JSON.parse(response.body.tr('\'', '"'))
+      end
+
+      def utxos(address)
+        uri = URI("#{root_node_url}/addr/#{address}/utxo")
+        response = Net::HTTP.get_response(uri)
+
+        JSON.parse(response.body)
+      end
+
+      def tx(txid)
+        uri = URI("#{root_node_url}/tx/#{txid}")
+        response = Net::HTTP.get_response(uri)
+
+        JSON.parse(response.body)
+      end
+
+      def estimate_fee
+        uri = URI("#{root_node_url}/utils/estimatefee")
+        response = Net::HTTP.get_response(uri)
+
+        result = JSON.parse(response.body)
+        result['2']
       end
 
       private

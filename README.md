@@ -34,24 +34,13 @@ Or install it yourself as:
 # the change address, the address who owns the recipient token and the script.
 
 Bitcoin.network = :testnet3
-token = Keoken::Token.new(name: 'test-keoken')
+token = Keoken::Token.new(name: "test-keoken-bitex")
 token.create(1_000_000)
-tx_id = 'aa699dc5ddf598a50dc2cb2cb2729629cb9d2d865df38e4367d13f81ef55f96e'
-input_script = '76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac'
-position = 0
-script = token.hex
-input_amount = 5_0000_0000
-output_amount = 4_9991_0000
 key = Bitcoin::Key.from_base58("cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU")
-@transaction_token = Keoken::Backend::BitcoinRuby::Transaction.create(tx_id,
-                                                                      position,
-                                                                      input_script,
-                                                                      input_amount,
-                                                                      output_amount,
-                                                                      key,
-                                                                      script)
-transaction = Keoken::Bitprim::Transaction.new(@transaction_token.raw)
-transaction.send_tx
+script = token.hex
+@transaction_token = Keoken::Backend::BitcoinRuby::Transaction.build(key.addr, key, script, :create)
+transaction = Keoken::Bitprim::Transaction.new
+transaction.send_tx(@transaction_token.raw)
 ```
 
 ### Send token money and send transaction to the blockchain
