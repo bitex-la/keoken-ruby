@@ -8,6 +8,8 @@ module Keoken
         @bitprim_transaction = Keoken::Bitprim::Transaction.new
       end
 
+      protected
+
       def build_inputs(address)
         utxos = bitprim_transaction.utxos(address)
         utxos.each do |utxo|
