@@ -51,7 +51,8 @@ describe Keoken do
       token.create(1_000_000)
       key = Bitcoin::Key.from_base58('cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU')
       script = token.hex
-      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.build_for_creation(key.addr, key, script)
+      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.new
+      @transaction_token.build_for_creation(key.addr, key, script)
     end
 
     it "format to_json" do
@@ -104,7 +105,8 @@ describe Keoken do
       token.send_amount(500_000)
       key = Bitcoin::Key.from_base58('cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU')
       script = token.hex
-      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.build_for_send_amount(key.addr, 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', key, script)
+      @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.new
+      @transaction_token.build_for_send_amount(key.addr, 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', key, script)
     end
 
     it "format to_json" do

@@ -1,9 +1,9 @@
 module Keoken
   module Backend
     module BitcoinRuby
-      class Transaction
+      class Transaction < Keoken::Backend::Base
         attr_accessor :to_json, :raw
-        extend Bitcoin::Builder
+        include Bitcoin::Builder
 
         # Create the transaction to broadcast in order to create tokens.
         #
@@ -13,7 +13,7 @@ module Keoken
         #
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
-        def self.build_for_creation(address, key, script)
+        def build_for_creation(address, key, script)
           build(address, nil, key, script, :create)
         end
 
@@ -26,7 +26,7 @@ module Keoken
         #
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
-        def self.build_for_send_amount(address, address_dest, key, script)
+        def build_for_send_amount(address, address_dest, key, script)
           build(address, address_dest, key, script, :send)
         end
 
@@ -40,39 +40,17 @@ module Keoken
         #
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
-        def self.build(address, addr2, key, script, type)
-          bitprim_transaction = Keoken::Bitprim::Transaction.new
-          utxos = bitprim_transaction.utxos(address)
-          inputs = []
-          utxos.each do |utxo|
-            txid = utxo['txid']
-            transaction = bitprim_transaction.tx(txid)
-            outputs = transaction['vout'].select do |vout|
-              addresses = vout['scriptPubKey']['addresses']
-              if addresses
-                addresses.any? { |vout_address| vout_address == address }
-              end
-            end
-            raise Keoken::OutputNotFound if outputs.empty?
-            output = outputs.first
-            inputs.push(
-              tx_id: txid,
-              position: output['n'],
-              input_script: output['scriptPubKey']['hex'],
-              input_amount: output['value'].sub!(/\./, '').sub!(/^0+/, '').to_i
-            )
-          end
-          total = inputs.map { |input| input[:input_amount].to_i }.inject(:+)
-          estimate_fee = bitprim_transaction.estimate_fee.to_f
-          fee = ((10 + 149 * inputs.length + 35 * output_length(type)) * estimate_fee).to_s[0..9].sub!(/\./, '').sub!(/0+/, '')
+        def build(address, addr2, key, script, type)
+          build_inputs(address)
+          total, fee = build_fee(type)
           case type
           when :create
             output_amount = total - fee.to_i
-            create(inputs, output_amount, key.addr, key, script)
+            create(@inputs, output_amount, key.addr, key, script)
           when :send
             output_amount = total - (fee.to_i * 2)
             output_amount_to_addr2 = fee.to_i
-            send_amount(inputs, output_amount, key.addr, output_amount_to_addr2, addr2, key, script)
+            send_amount(@inputs, output_amount, key.addr, output_amount_to_addr2, addr2, key, script)
           end
         end
 
@@ -86,8 +64,7 @@ module Keoken
         #
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
-        def self.create(inputs, output_amount, output_address, key, script)
-          token = new
+        def create(inputs, output_amount, output_address, key, script)
           tx = build_tx do |t|
             inputs.each do |input|
               t.input do |i|
@@ -106,9 +83,9 @@ module Keoken
               o.to(script, :custom)
             end
           end
-          token.to_json = tx.to_json
-          token.raw = tx.to_payload.bth
-          token
+          @to_json = tx.to_json
+          @raw = tx.to_payload.bth
+          self
         end
 
         # Create the transaction to broadcast in order to send amount between tokens.
@@ -123,8 +100,7 @@ module Keoken
         #
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
-        def self.send_amount(inputs, output_amount, output_address, output_amount_to_addr2, addr2, key, script)
-          token = self.new
+        def send_amount(inputs, output_amount, output_address, output_amount_to_addr2, addr2, key, script)
           tx = build_tx do |t|
             inputs.each do |input|
               t.input do |i|
@@ -149,18 +125,9 @@ module Keoken
               o.to(script, :custom)
             end
           end
-          token.to_json = tx.to_json
-          token.raw = tx.to_payload.bth
-          token
-        end
-
-        def self.output_length(type)
-          case type
-          when :create
-            2
-          when :send
-            3
-          end
+          @to_json = tx.to_json
+          @raw = tx.to_payload.bth
+          self
         end
       end
     end
