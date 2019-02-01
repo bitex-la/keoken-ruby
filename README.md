@@ -51,7 +51,7 @@ bitprim_transaction = Keoken::Bitprim::Transaction.new
 assets = bitprim_transaction.assets_by_address('mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDA')
 token = Keoken::Token.new(id: assets.first['asset_id'])
 token.send_amount(500_000)
-key = Bitcoin::Key.from_base58('cShKfHoHVf6iKKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2oxBU')
+key = Bitcoin::Key.from_base58('cShKfHoHVf6iYKZym18ip1MJFQFxJwbcLxW53MQikxdDsGd2ofBU')
 script = token.hex
 @transaction_token = Keoken::Backend::BitcoinRuby::Transaction.build_for_send_amount(key.addr, 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', key, script)
 transaction = Keoken::Bitprim::Transaction.new
