@@ -64,7 +64,7 @@ module Keoken
           end
           total = inputs.map { |input| input[:input_amount].to_i }.inject(:+)
           estimate_fee = bitprim_transaction.estimate_fee.to_f
-          fee = ((10 + 149 * inputs.length + 35 * output_length(type)) * estimate_fee).to_s.sub!(/\./, '').sub!(/^0+/, '')
+          fee = ((10 + 149 * inputs.length + 35 * output_length(type)) * estimate_fee).to_s[0..9].sub!(/\./, '').sub!(/0+/, '')
           case type
           when :create
             output_amount = total - fee.to_i
