@@ -38,6 +38,12 @@ module Keoken
         JSON.parse(response.body.tr('\'', '"'))
       end
 
+      # Get utxos from address.
+      #
+      # @param address [String] The address that contains the utxos.
+      #
+      # @return [Array] Detailed info from utxos.
+      #
       def utxos(address)
         uri = URI("#{root_node_url}/addr/#{address}/utxo")
         response = Net::HTTP.get_response(uri)
@@ -45,6 +51,12 @@ module Keoken
         JSON.parse(response.body)
       end
 
+      # Get transaction details from transaction hash.
+      #
+      # @param txid [String] The transaction id to get the info.
+      #
+      # @return [Array] Detailed info from transaction.
+      #
       def tx(txid)
         uri = URI("#{root_node_url}/tx/#{txid}")
         response = Net::HTTP.get_response(uri)
@@ -52,6 +64,10 @@ module Keoken
         JSON.parse(response.body)
       end
 
+      # Get estimate fee.
+      #
+      # @return [Json] Fee estimated per kb.
+      #
       def estimate_fee
         uri = URI("#{root_node_url}/utils/estimatefee")
         response = Net::HTTP.get_response(uri)
