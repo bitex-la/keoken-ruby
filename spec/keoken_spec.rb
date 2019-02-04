@@ -1,11 +1,11 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Keoken do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Keoken::VERSION).not_to be nil
   end
 
-  it "defines keoken constants" do
+  it 'defines keoken constants' do
     expect(Keoken::PREFIX_SIZE).not_to be nil
     expect(Keoken::PREFIX).not_to be nil
     expect(Keoken::VERSION_NODE).not_to be nil
@@ -17,33 +17,54 @@ describe Keoken do
     expect(Keoken::ASSET_ID_SIZE).not_to be nil
   end
 
-  it "creates the test-keoken token" do
-    token = Keoken::Token.new(name: "test-keoken")
+  it 'creates the test-keoken token' do
+    token = Keoken::Token.new(name: 'test-keoken')
     token.create(1_000_000)
     expect(token.hex).to(
-      eq("6a0400004b501800000000746573742d6b656f6b656e000000000001000000")
+      eq('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
     )
   end
 
-  it "raise an error when name is not provided" do
+  it 'serialize the test-keoken token' do
+    token = Keoken::Token.new
+    token.parse_script('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+    expect(token.to_json).to(
+      eq('{"id":null,"name":"test-keoken","amount":1000000,"transaction_type":"create"}')
+    )
+  end
+
+  it 'deserialize the test-keoken token' do
+    token = Keoken::Token.new
+    token.parse_script('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+    expect(token.to_hash).to(
+      eq(
+        amount: 1_000_000,
+        name: 'test-keoken',
+        id: nil,
+        transaction_type: :create
+      )
+    )
+  end
+
+  it 'raise an error when name is not provided' do
     token = Keoken::Token.new
     expect { token.create(1_000_000) }.to raise_error(Keoken::NameNotFound)
   end
 
-  it "raise an error when id is not provided" do
+  it 'raise an error when id is not provided' do
     token = Keoken::Token.new
     expect { token.send_amount(1_000_000) }.to raise_error(Keoken::IdNotFound)
   end
 
-  it "send 1_000_000 to token with 34 id" do
+  it 'send 1_000_000 to token with 34 id' do
     token = Keoken::Token.new(id: 34)
     token.send_amount(1_000_000)
     expect(token.hex).to(
-      eq("6a0400004b501000000001000000340000000001000000")
+      eq('6a0400004b501000000001000000340000000001000000')
     )
   end
 
-  describe "creates token" do
+  describe 'creates token' do
     before(:each) do
       mock_requests
       Bitcoin.network = :testnet3
@@ -73,22 +94,26 @@ describe Keoken do
       )
     end
 
-    it "raw transaction" do
+    it 'raw transaction' do
       raw = @transaction_token.raw
-      expect(raw).to start_with("0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006")
-      expect(raw).to end_with("6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000")
+      expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006')
+      expect(raw).to end_with('6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000')
     end
 
-    it "broadcast transaction" do
-      stub_request(:post, "https://tbch.blockdozer.com/insight-api/tx/send")
-        .with(:body => {"rawtx" => /0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006/},
-              headers: {
-                "Accept" => "*/*",
-                "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-                "Content-Type" => "application/x-www-form-urlencoded",
-                "Host" => "tbch.blockdozer.com",
-                "User-Agent" => "Ruby",
-              })
+    it 'broadcast transaction' do
+      stub_request(:post, 'https://tbch.blockdozer.com/insight-api/tx/send')
+        .with(
+          body:
+           {
+             'rawtx' => /0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006/ 
+           },
+          headers: {
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Content-Type" => "application/x-www-form-urlencoded",
+            "Host" => "tbch.blockdozer.com",
+            "User-Agent" => "Ruby",
+          })
         .to_return(status: 200, body: "{\"txid\":\"f410c773d079327b8283c175b08a84faa6ffcfbde40b5939b85f07f0dfde2eb8\"}", headers: {})
       transaction = Keoken::Bitprim::Transaction.new
       expect(transaction.send_tx(@transaction_token.raw)).to eq({"txid" => "f410c773d079327b8283c175b08a84faa6ffcfbde40b5939b85f07f0dfde2eb8"})

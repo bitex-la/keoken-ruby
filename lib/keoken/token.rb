@@ -1,6 +1,6 @@
 module Keoken
   class Token
-    attr_accessor :data_script, :name, :id
+    attr_accessor :data_script, :name, :id, :amount, :transaction_type
 
     # Creates a new token object.
     #
@@ -9,8 +9,8 @@ module Keoken
     # @option options [Number] :id The id of token to obtain an amount to send to another address.
     #
     def initialize(options = {})
-      @name = options[:name]
-      @id = options[:id]
+      @name   = options[:name]
+      @id     = options[:id]
     end
 
     # Generate the script to create a token.
@@ -62,6 +62,64 @@ module Keoken
       ].join + @data_script
     end
 
+    # JSON serialization of object
+    #
+    # return [String] JSON serialization of token object.
+    def to_json
+      {
+        id: @id,
+        name: @name,
+        amount: @amount,
+        transaction_type: @transaction_type
+      }.to_json
+    end
+
+    # Deserialization of object
+    #
+    # return [Hash] Deserialization of token object.
+    def to_hash
+      {
+        id: @id,
+        name: @name,
+        amount: @amount,
+        transaction_type: @transaction_type
+      }
+    end
+
+    def parse_script(script)
+      binary = script.htb
+      bytes  = binary.bytes
+      result = bytes.slice!(0)
+      raise Keoken::DataNotParsed, 'OP_RETURN missing' unless result == Bitcoin::Script::OP_RETURN.to_i
+      result = bytes.slice!(0)
+      raise Keoken::DataNotParsed, 'Prefix size missing' unless result == Keoken::PREFIX_SIZE.to_i
+      result = bytes.slice!(0..Keoken::PREFIX.htb.bytes.length - 1)
+      raise Keoken::DataNotParsed, 'Prefix not provided' unless result == Keoken::PREFIX.htb.bytes
+      bytesize = bytes.slice!(0)
+      raise Keoken::DataNotParsed, 'Bytesize not provided' unless bytesize == bytes.length
+      result = bytes.slice!(0..3)
+      @transaction_type =
+        if result.join == Keoken::TYPE_CREATE_ASSET
+          :create
+        elsif result.join == Keoken::TYPE_SEND_TOKEN
+          :send
+        else
+          raise Keoken::DataNotParsed, 'Transaction type not valid'
+        end
+      name = []
+      end_of_name = false
+      loop do
+        tmp = bytes.slice!(0)
+        end_of_name ||= tmp > 0
+        next if tmp.zero? && !end_of_name
+        break if tmp.zero? && end_of_name
+        name.push tmp
+      end
+
+      @amount = bytes.map { |byte| byte.zero? ? "#{byte}0" : byte.to_s }.join.to_i
+      @name = name.map { |n| n.to_s(16).htb }.join
+    end
+
     private
 
     def data_length
@@ -73,7 +131,7 @@ module Keoken
     end
 
     def name_to_hex(name)
-      asset_bytes = name.bytes.map{|n| n.to_s(16)}
+      asset_bytes = name.bytes.map { |n| n.to_s(16) }
       asset_bytes + ['00']
     end
   end
