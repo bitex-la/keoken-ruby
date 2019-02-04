@@ -2,6 +2,7 @@ require 'bitcoin'
 
 require 'keoken/extensions/bitcoin/script'
 require 'keoken/token'
+require 'keoken/parser'
 require 'keoken/backend/base'
 require 'keoken/backend/bitcoin_ruby/transaction'
 require 'keoken/bitprim/transaction'

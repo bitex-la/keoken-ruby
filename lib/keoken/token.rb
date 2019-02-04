@@ -87,37 +87,11 @@ module Keoken
     end
 
     def parse_script(script)
-      binary = script.htb
-      bytes  = binary.bytes
-      result = bytes.slice!(0)
-      raise Keoken::DataNotParsed, 'OP_RETURN missing' unless result == Bitcoin::Script::OP_RETURN.to_i
-      result = bytes.slice!(0)
-      raise Keoken::DataNotParsed, 'Prefix size missing' unless result == Keoken::PREFIX_SIZE.to_i
-      result = bytes.slice!(0..Keoken::PREFIX.htb.bytes.length - 1)
-      raise Keoken::DataNotParsed, 'Prefix not provided' unless result == Keoken::PREFIX.htb.bytes
-      bytesize = bytes.slice!(0)
-      raise Keoken::DataNotParsed, 'Bytesize not provided' unless bytesize == bytes.length
-      result = bytes.slice!(0..3)
-      @transaction_type =
-        if result.join == Keoken::TYPE_CREATE_ASSET
-          :create
-        elsif result.join == Keoken::TYPE_SEND_TOKEN
-          :send
-        else
-          raise Keoken::DataNotParsed, 'Transaction type not valid'
-        end
-      name = []
-      end_of_name = false
-      loop do
-        tmp = bytes.slice!(0)
-        end_of_name ||= tmp > 0
-        next if tmp.zero? && !end_of_name
-        break if tmp.zero? && end_of_name
-        name.push tmp
-      end
-
-      @amount = bytes.map { |byte| byte.zero? ? "#{byte}0" : byte.to_s }.join.to_i
-      @name = name.map { |n| n.to_s(16).htb }.join
+      parser = Keoken::Parser.new(script)
+      parser.prefix
+      @name = parser.name
+      @transaction_type = parser.transaction_type
+      @amount = parser.amount
     end
 
     private
