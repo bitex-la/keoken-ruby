@@ -46,6 +46,19 @@ describe Keoken do
     )
   end
 
+  it 'deserialize the token with id' do
+    token = Keoken::Token.new
+    token.parse_script('6a0400004b501000000001000000340000000001000000')
+    expect(token.to_hash).to(
+      eq(
+        amount: 1_000_000,
+        name: nil,
+        id: '34',
+        transaction_type: :send
+      )
+    )
+  end
+
   it 'raise an error when name is not provided' do
     token = Keoken::Token.new
     expect { token.create(1_000_000) }.to raise_error(Keoken::NameNotFound)

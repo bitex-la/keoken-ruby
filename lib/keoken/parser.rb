@@ -17,18 +17,19 @@ module Keoken
       raise Keoken::DataNotParsed, 'Bytesize not provided' unless bytesize == @data.length
     end
 
-    def transaction_type
+    def set_transaction_type
       result = @data.slice!(0..3).join
-      if result == Keoken::TYPE_CREATE_ASSET
+      @transaction_type = if result == Keoken::TYPE_CREATE_ASSET
         :create
       elsif result == Keoken::TYPE_SEND_TOKEN
         :send
       else
         raise Keoken::DataNotParsed, 'Transaction type not valid'
       end
+      @transaction_type
     end
 
-    def name
+    def name_or_id
       name = []
       end_of_name = false
       loop do
@@ -38,7 +39,11 @@ module Keoken
         break if tmp.zero? && end_of_name
         name.push tmp
       end
-      name.map { |n| n.to_s(16).htb }.join
+      if @transaction_type == :create
+        name.map { |n| n.to_s(16).htb }.join
+      elsif @transaction_type == :send
+        name.map { |n| n.to_s(16) }.join
+      end
     end
 
     def amount

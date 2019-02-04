@@ -89,8 +89,12 @@ module Keoken
     def parse_script(script)
       parser = Keoken::Parser.new(script)
       parser.prefix
-      @name = parser.name
-      @transaction_type = parser.transaction_type
+      @transaction_type = parser.set_transaction_type
+      if @transaction_type == :create
+        @name = parser.name_or_id
+      else
+        @id = parser.name_or_id
+      end
       @amount = parser.amount
     end
 
