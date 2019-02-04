@@ -22,17 +22,17 @@ Or install it yourself as:
 
 ## Usage
 
+It uses bitcoin-ruby, but you can use Trezor or Electrum, the most important command is the script,
+which you can obtain with token.hex,
+then you can send it as an output with a scriptPubKey and a value of 0.
+In order to crate a token you need two outputs,
+the change address with an amount less than original (for fees)
+and the other one for the script. To send money you need three outputs,
+the change address, the address who owns the recipient token and the script.
+
 ### Create token and send it to the blockchain
 
 ```ruby
-# It uses bitcoin-ruby, but you can use Trezor or Electrum, the most important command is the script,
-# which you can obtain with token.hex,
-# then you can send it as an output with a scriptPubKey and a value of 0.
-# In order to crate a token you need two outputs,
-# the change address with an amount less than original (for fees)
-# and the other one for the script. To send money you need three outputs,
-# the change address, the address who owns the recipient token and the script.
-
 Bitcoin.network = :testnet3
 token = Keoken::Token.new(name: "test-keoken-bitex")
 token.create(1_000_000)
