@@ -1,14 +1,16 @@
 require 'bitcoin'
 
+require 'keoken/errors/id_not_found'
+require 'keoken/errors/name_not_found'
+require 'keoken/errors/data_not_parsed'
+require 'keoken/errors/output_not_found'
 require 'keoken/extensions/bitcoin/script'
 require 'keoken/parser'
 require 'keoken/token'
 require 'keoken/backend/base'
 require 'keoken/backend/bitcoin_ruby/transaction'
+require 'keoken/backend/trezor/transaction'
 require 'keoken/bitprim/transaction'
-require 'keoken/errors/id_not_found'
-require 'keoken/errors/name_not_found'
-require 'keoken/errors/data_not_parsed'
 
 module Keoken
   PREFIX_SIZE = '04'.freeze

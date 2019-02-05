@@ -14,7 +14,7 @@ module Keoken
         #
         def build_for_creation(address, path, script)
           build_inputs(address)
-          total, fee = build_fee(type)
+          total, fee = build_fee(:create)
           output_amount = total - fee.to_i
           create(@inputs, path, address, output_amount, script)
         end
@@ -30,7 +30,7 @@ module Keoken
         #
         def build_for_send_amount(address, address_dest, path, script)
           build_inputs(address)
-          total, fee = build_fee(type)
+          total, fee = build_fee(:send)
           output_amount = total - (fee.to_i * 2)
           output_amount_to_addr2 = fee.to_i
           send(@inputs, path, output_amount, address, output_amount_to_addr2, address_dest, script)

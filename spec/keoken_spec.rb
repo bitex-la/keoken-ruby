@@ -184,6 +184,43 @@ describe Keoken do
       expect(raw).to end_with('6a0400004b5010000000010000012300000000007a120000000000')
     end
   end
+  
+  describe 'creates token with Trezor' do
+    it 'creates token' do
+      mock_requests
+      allow(ENV).to receive(:[]).with('KEOKEN_NODE').and_return('PRODUCTION')
+      token = Keoken::Token.new(name: 'test-keoken')
+      token.create(1_000_000)
+      script = token.hex
+      @transaction_token = Keoken::Backend::Trezor::Transaction.new
+      expect(@transaction_token.build_for_creation('17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX', [44, 145, 0, 0, 0], script)).to(
+        eq(
+          inputs:
+            [
+              {
+                address_n: [44, 145, 0, 0, 0],
+                amount: 8985999,
+                prev_hash: '448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da',
+                prev_index: 1
+              }
+            ],
+          outputs:
+            [
+              {
+                address: '17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX',
+                amount: 8757229,
+                script_type: 'PAYTOADDRESS'
+              },
+              {
+                amount: '0',
+                op_return_data: '6a0400004b501700000000746573742d6b656f6b656e00000000000f4240',
+                script_type: 'PAYTOOPRETURN'
+              }
+            ]
+        )
+      )
+    end
+  end
 end
 
 def mock_requests
@@ -197,14 +234,33 @@ def mock_requests
           }).
     to_return(:status => 200, :body => body_request, :headers => {})
 
+  body_request = "[{\"address\":\"17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX\",\"txid\":\"448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da\",\"vout\":1,\"scriptPubKey\":\"76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac\",\"amount\":0.08985999,\"satoshis\":8985999,\"height\":1282589,\"confirmations\":1356}]"
+  stub_request(:get, "https://bch.blockdozer.com/insight-api/addr/17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX/utxo").
+    with(:headers => {
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Host" => "bch.blockdozer.com",
+            "User-Agent" => "Ruby",
+          }).
+    to_return(:status => 200, :body => body_request, :headers => {})
+
   body_request = "{\"txid\":\"448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da\",\"version\":1,\"locktime\":0,\"vin\":[{\"txid\":\"48c158109ca432e109971ca61e4bccbdc2b51053c02f8183f5ca7f60a55df4d0\",\"vout\":0,\"sequence\":4294967295,\"n\":0,\"scriptSig\":{\"hex\":\"483045022100a64b8798d783d1fb7ea306cfdc2aa09cae972cbfed3fcd92a4501e54035f869b022004da604a3dd52cecd8b89200065b96bdf7c3684e6ec983ed3dceed1bf8d3a480412102bd2af43b8c683f7bb5c5dc4aad7c5a2961252676d85c2547de9767e1a6252455\",\"asm\":\"3045022100a64b8798d783d1fb7ea306cfdc2aa09cae972cbfed3fcd92a4501e54035f869b022004da604a3dd52cecd8b89200065b96bdf7c3684e6ec983ed3dceed1bf8d3a480[ALL|FORKID] 02bd2af43b8c683f7bb5c5dc4aad7c5a2961252676d85c2547de9767e1a6252455\"},\"addr\":\"mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDA\",\"valueSat\":9991999,\"value\":0.09991999,\"doubleSpentTxID\":null}],\"vout\":[{\"value\":\"0.01000000\",\"n\":0,\"scriptPubKey\":{\"hex\":\"76a9141a53f3efae04708754ca1c5382085249c0ff597d88ac\",\"asm\":\"OP_DUP OP_HASH160 1a53f3efae04708754ca1c5382085249c0ff597d OP_EQUALVERIFY OP_CHECKSIG\",\"addresses\":[\"mhvASBxPioT6eLPtSA5u1SNoT49RsME3BJ\"],\"type\":\"pubkeyhash\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null},{\"value\":\"0.08985999\",\"n\":1,\"scriptPubKey\":{\"hex\":\"76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac\",\"asm\":\"OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG\",\"addresses\":[\"mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDA\"],\"type\":\"pubkeyhash\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null},{\"value\":\"0.00000000\",\"n\":2,\"scriptPubKey\":{\"hex\":\"6a0400004b501000000001000000170000000000000064\",\"asm\":\"OP_RETURN 1347092480 00000001000000170000000000000064\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null}],\"blockhash\":\"0000000000009505e41c238f88f5c9b5591e92f7eb68545962a5dd71cd075525\",\"blockheight\":1282589,\"confirmations\":1356,\"time\":1548360176,\"blocktime\":1548360176,\"valueOut\":0.09985999,\"size\":258,\"valueIn\":0.09991999,\"fees\":0.00006}"
   stub_request(:get, "https://tbch.blockdozer.com/insight-api/tx/448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da").
     with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Host'=>'tbch.blockdozer.com', 'User-Agent'=>'Ruby'}).
     to_return(:status => 200, :body => body_request, :headers => {})
 
+  body_request = "{\"txid\":\"448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da\",\"version\":1,\"locktime\":0,\"vin\":[{\"txid\":\"48c158109ca432e109971ca61e4bccbdc2b51053c02f8183f5ca7f60a55df4d0\",\"vout\":0,\"sequence\":4294967295,\"n\":0,\"scriptSig\":{\"hex\":\"483045022100a64b8798d783d1fb7ea306cfdc2aa09cae972cbfed3fcd92a4501e54035f869b022004da604a3dd52cecd8b89200065b96bdf7c3684e6ec983ed3dceed1bf8d3a480412102bd2af43b8c683f7bb5c5dc4aad7c5a2961252676d85c2547de9767e1a6252455\",\"asm\":\"3045022100a64b8798d783d1fb7ea306cfdc2aa09cae972cbfed3fcd92a4501e54035f869b022004da604a3dd52cecd8b89200065b96bdf7c3684e6ec983ed3dceed1bf8d3a480[ALL|FORKID] 02bd2af43b8c683f7bb5c5dc4aad7c5a2961252676d85c2547de9767e1a6252455\"},\"addr\":\"17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX\",\"valueSat\":9991999,\"value\":0.09991999,\"doubleSpentTxID\":null}],\"vout\":[{\"value\":\"0.01000000\",\"n\":0,\"scriptPubKey\":{\"hex\":\"76a9141a53f3efae04708754ca1c5382085249c0ff597d88ac\",\"asm\":\"OP_DUP OP_HASH160 1a53f3efae04708754ca1c5382085249c0ff597d OP_EQUALVERIFY OP_CHECKSIG\",\"addresses\":[\"mhvASBxPioT6eLPtSA5u1SNoT49RsME3BJ\"],\"type\":\"pubkeyhash\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null},{\"value\":\"0.08985999\",\"n\":1,\"scriptPubKey\":{\"hex\":\"76a9147bb97684cc43e2f8ea0ed1d50dddce3ebf80063888ac\",\"asm\":\"OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG\",\"addresses\":[\"17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX\"],\"type\":\"pubkeyhash\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null},{\"value\":\"0.00000000\",\"n\":2,\"scriptPubKey\":{\"hex\":\"6a0400004b501000000001000000170000000000000064\",\"asm\":\"OP_RETURN 1347092480 00000001000000170000000000000064\"},\"spentTxId\":null,\"spentIndex\":null,\"spentHeight\":null}],\"blockhash\":\"0000000000009505e41c238f88f5c9b5591e92f7eb68545962a5dd71cd075525\",\"blockheight\":1282589,\"confirmations\":1356,\"time\":1548360176,\"blocktime\":1548360176,\"valueOut\":0.09985999,\"size\":258,\"valueIn\":0.09991999,\"fees\":0.00006}"
+  stub_request(:get, "https://bch.blockdozer.com/insight-api/tx/448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da").
+    with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Host'=>'bch.blockdozer.com', 'User-Agent'=>'Ruby'}).
+    to_return(:status => 200, :body => body_request, :headers => {})
+
   stub_request(:get, "https://tbch.blockdozer.com/insight-api/utils/estimatefee").
     with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Host'=>'tbch.blockdozer.com', 'User-Agent'=>'Ruby'}).
     to_return(:status => 200, :body => "{\"2\":0.0001021}", :headers => {})
+
+  stub_request(:get, "https://bch.blockdozer.com/insight-api/utils/estimatefee").
+    with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Host'=>'bch.blockdozer.com', 'User-Agent'=>'Ruby'}).
+    to_return(:status => 200, :body => "{\"2\":0.00000999}", :headers => {})
 
   body_response = "[{'amount': 100000, 'asset_creator': 'mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDA', 'asset_id': 123, 'asset_name': 'keoken-token'}]"
   stub_request(:get, "https://explorer.testnet.keoken.io/api/get_assets_by_address?address=mro9aqn4xCzXVS7jRFFuzT2ERKonvPdSDA")
