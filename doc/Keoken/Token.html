@@ -69,10 +69,12 @@
   <dl>
     <dt>Inherits:</dt>
     <dd>
-      <span class="inheritName">Object</span>
+      <span class="inheritName"><span class='object_link'><a href="Parser.html" title="Keoken::Parser (class)">Parser</a></span></span>
       
         <ul class="fullTree">
           <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="Parser.html" title="Keoken::Parser (class)">Parser</a></span></li>
           
             <li class="next">Keoken::Token</li>
           
@@ -109,7 +111,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#hex-instance_method" title="#hex (instance method)">#<strong>hex</strong>  &#x21d2; Object </a>
+      <a href="#data_script-instance_method" title="#data_script (instance method)">#<strong>data_script</strong>  &#x21d2; Object </a>
     
 
     
@@ -126,7 +128,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>Returns the value of attribute hex.</div></span>
+    <span class="summary_desc"><div class='inline'>Returns the value of attribute data_script.</div></span>
   
 </li>
 
@@ -156,34 +158,14 @@
 </li>
 
     
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#name-instance_method" title="#name (instance method)">#<strong>name</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>Returns the value of attribute name.</div></span>
-  
-</li>
-
-    
   </ul>
 
 
+
+  
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="Parser.html" title="Keoken::Parser (class)">Parser</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Parser.html#amount-instance_method" title="Keoken::Parser#amount (method)">#amount</a></span>, <span class='object_link'><a href="Parser.html#data-instance_method" title="Keoken::Parser#data (method)">#data</a></span>, <span class='object_link'><a href="Parser.html#name-instance_method" title="Keoken::Parser#name (method)">#name</a></span>, <span class='object_link'><a href="Parser.html#transaction_type-instance_method" title="Keoken::Parser#transaction_type (method)">#transaction_type</a></span></p>
 
 
   
@@ -212,6 +194,28 @@
 
   
     <span class="summary_desc"><div class='inline'>Generate the script to create a token.</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#hex-instance_method" title="#hex (instance method)">#<strong>hex</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>Hexadecimal value of script.</div></span>
   
 </li>
 
@@ -262,10 +266,60 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_hash-instance_method" title="#to_hash (instance method)">#<strong>to_hash</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>Deserialization of object.</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_json-instance_method" title="#to_json (instance method)">#<strong>to_json</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>JSON serialization of object.</div></span>
+  
+</li>
+
+      
     </ul>
   
 
-<div id="constructor_details" class="method_details_list">
+
+  
+  
+  
+  
+  
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -333,6 +387,17 @@
           
         </li>
       
+        <li>
+          <span class="name">:script</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>An hexadecimal script intended to be parsed.</div>
+          
+        </li>
+      
     </ul>
   
 
@@ -343,17 +408,23 @@
       <pre class="lines">
 
 
-11
 12
 13
-14</pre>
+14
+15
+16
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
-  <span class='ivar'>@id</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
+  <span class='ivar'>@name</span>   <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+  <span class='ivar'>@id</span>     <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:script</span><span class='rbracket'>]</span>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:script</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_parse_script'>parse_script</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -366,11 +437,11 @@
     <h2>Instance Attribute Details</h2>
     
       
-      <span id="hex=-instance_method"></span>
+      <span id="data_script=-instance_method"></span>
       <div class="method_details first">
-  <h3 class="signature first" id="hex-instance_method">
+  <h3 class="signature first" id="data_script-instance_method">
   
-    #<strong>hex</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>data_script</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -378,7 +449,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    Returns the value of attribute hex
+    Returns the value of attribute data_script
 
   </div>
 </div>
@@ -398,8 +469,8 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 3</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_hex'>hex</span>
-  <span class='ivar'>@hex</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_data_script'>data_script</span>
+  <span class='ivar'>@data_script</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -441,47 +512,6 @@
 
 <span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span>
   <span class='ivar'>@id</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id="name=-instance_method"></span>
-      <div class="method_details ">
-  <h3 class="signature " id="name-instance_method">
-  
-    #<strong>name</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    Returns the value of attribute name
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-3
-4
-5</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 3</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
-  <span class='ivar'>@name</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -566,10 +596,6 @@
       <pre class="lines">
 
 
-22
-23
-24
-25
 26
 27
 28
@@ -583,22 +609,83 @@
 36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="NameNotFound.html" title="Keoken::NameNotFound (class)">NameNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@name</span>
-  <span class='id identifier rubyid_data_script'>data_script</span> <span class='op'>=</span>
-    <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
-     <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#TYPE_CREATE_ASSET-constant" title="Keoken::TYPE_CREATE_ASSET (constant)">TYPE_CREATE_ASSET</a></span></span><span class='comma'>,</span>
-     <span class='id identifier rubyid_name_to_hex'>name_to_hex</span><span class='lparen'>(</span><span class='ivar'>@name</span><span class='rparen'>)</span><span class='comma'>,</span>
-     <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_AMOUNT-constant" title="Keoken::PREFIX_BYTE_AMOUNT (constant)">PREFIX_BYTE_AMOUNT</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#AMOUNT_SIZE-constant" title="Keoken::AMOUNT_SIZE (constant)">AMOUNT_SIZE</a></span></span> <span class='op'>-</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
-  <span class='id identifier rubyid_data_length'>data_length</span> <span class='op'>=</span> <span class='id identifier rubyid_data_script'>data_script</span><span class='period'>.</span><span class='id identifier rubyid_htb'>htb</span><span class='period'>.</span><span class='id identifier rubyid_bytesize'>bytesize</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
-
-  <span class='ivar'>@hex</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>Bitcoin</span><span class='op'>::</span><span class='const'>Script</span><span class='op'>::</span><span class='const'>OP_RETURN</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='comma'>,</span>
-          <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_SIZE-constant" title="Keoken::PREFIX_SIZE (constant)">PREFIX_SIZE</a></span></span><span class='comma'>,</span>
-          <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX-constant" title="Keoken::PREFIX (constant)">PREFIX</a></span></span><span class='comma'>,</span>
-          <span class='id identifier rubyid_data_length'>data_length</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span> <span class='op'>+</span> <span class='id identifier rubyid_data_script'>data_script</span>
+  <span class='ivar'>@data_script</span> <span class='op'>=</span>
+    <span class='lbracket'>[</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#TYPE_CREATE_ASSET-constant" title="Keoken::TYPE_CREATE_ASSET (constant)">TYPE_CREATE_ASSET</a></span></span><span class='comma'>,</span>
+      <span class='id identifier rubyid_name_to_hex'>name_to_hex</span><span class='lparen'>(</span><span class='ivar'>@name</span><span class='rparen'>)</span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_AMOUNT-constant" title="Keoken::PREFIX_BYTE_AMOUNT (constant)">PREFIX_BYTE_AMOUNT</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_prefix_length'>prefix_length</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
+    <span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
   <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="hex-instance_method">
+  
+    #<strong>hex</strong>  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    Hexadecimal value of script.
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>Hexadecimal value of script token.</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 60</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_hex'>hex</span>
+  <span class='lbracket'>[</span>
+    <span class='const'>Bitcoin</span><span class='op'>::</span><span class='const'>Script</span><span class='op'>::</span><span class='const'>OP_RETURN</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_SIZE-constant" title="Keoken::PREFIX_SIZE (constant)">PREFIX_SIZE</a></span></span><span class='comma'>,</span>
+    <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX-constant" title="Keoken::PREFIX (constant)">PREFIX</a></span></span><span class='comma'>,</span>
+    <span class='id identifier rubyid_data_length'>data_length</span>
+  <span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span> <span class='op'>+</span> <span class='ivar'>@data_script</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -687,30 +774,124 @@
 52
 53
 54
-55
-56
-57
-58
-59</pre>
+55</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 44</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_send_amount'>send_amount</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="IdNotFound.html" title="Keoken::IdNotFound (class)">IdNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@id</span>
-  <span class='id identifier rubyid_data_script'>data_script</span> <span class='op'>=</span>
-    <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
-     <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#TYPE_SEND_TOKEN-constant" title="Keoken::TYPE_SEND_TOKEN (constant)">TYPE_SEND_TOKEN</a></span></span><span class='comma'>,</span>
-     <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_ASSET_ID-constant" title="Keoken::PREFIX_BYTE_ASSET_ID (constant)">PREFIX_BYTE_ASSET_ID</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#ASSET_ID_SIZE-constant" title="Keoken::ASSET_ID_SIZE (constant)">ASSET_ID_SIZE</a></span></span> <span class='op'>-</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span>
-     <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_AMOUNT-constant" title="Keoken::PREFIX_BYTE_AMOUNT (constant)">PREFIX_BYTE_AMOUNT</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#AMOUNT_SIZE-constant" title="Keoken::AMOUNT_SIZE (constant)">AMOUNT_SIZE</a></span></span> <span class='op'>-</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
-
-  <span class='id identifier rubyid_data_length'>data_length</span> <span class='op'>=</span> <span class='id identifier rubyid_data_script'>data_script</span><span class='period'>.</span><span class='id identifier rubyid_htb'>htb</span><span class='period'>.</span><span class='id identifier rubyid_bytesize'>bytesize</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
-
-  <span class='ivar'>@hex</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>Bitcoin</span><span class='op'>::</span><span class='const'>Script</span><span class='op'>::</span><span class='const'>OP_RETURN</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='comma'>,</span>
-          <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_SIZE-constant" title="Keoken::PREFIX_SIZE (constant)">PREFIX_SIZE</a></span></span><span class='comma'>,</span>
-          <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX-constant" title="Keoken::PREFIX (constant)">PREFIX</a></span></span><span class='comma'>,</span>
-          <span class='id identifier rubyid_data_length'>data_length</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span> <span class='op'>+</span> <span class='id identifier rubyid_data_script'>data_script</span>
+  <span class='id identifier rubyid_asset_length'>asset_length</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#ASSET_ID_SIZE-constant" title="Keoken::ASSET_ID_SIZE (constant)">ASSET_ID_SIZE</a></span></span> <span class='op'>-</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span>
+  <span class='ivar'>@data_script</span> <span class='op'>=</span>
+    <span class='lbracket'>[</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#TYPE_SEND_TOKEN-constant" title="Keoken::TYPE_SEND_TOKEN (constant)">TYPE_SEND_TOKEN</a></span></span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_ASSET_ID-constant" title="Keoken::PREFIX_BYTE_ASSET_ID (constant)">PREFIX_BYTE_ASSET_ID</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_asset_length'>asset_length</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_AMOUNT-constant" title="Keoken::PREFIX_BYTE_AMOUNT (constant)">PREFIX_BYTE_AMOUNT</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_prefix_length'>prefix_length</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
+    <span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
   <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_hash-instance_method">
+  
+    #<strong>to_hash</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    Deserialization of object
+
+return [Hash] Deserialization of token object.
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+84
+85
+86
+87
+88
+89
+90
+91</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 84</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_hash'>to_hash</span>
+  <span class='lbrace'>{</span>
+    <span class='label'>id:</span> <span class='ivar'>@id</span><span class='comma'>,</span>
+    <span class='label'>name:</span> <span class='ivar'>@name</span><span class='comma'>,</span>
+    <span class='label'>amount:</span> <span class='ivar'>@amount</span><span class='comma'>,</span>
+    <span class='label'>transaction_type:</span> <span class='ivar'>@transaction_type</span>
+  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_json-instance_method">
+  
+    #<strong>to_json</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    JSON serialization of object
+
+return [String] JSON serialization of token object.
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+72
+73
+74
+75
+76
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 72</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_json'>to_json</span>
+  <span class='lbrace'>{</span>
+    <span class='label'>id:</span> <span class='ivar'>@id</span><span class='comma'>,</span>
+    <span class='label'>name:</span> <span class='ivar'>@name</span><span class='comma'>,</span>
+    <span class='label'>amount:</span> <span class='ivar'>@amount</span><span class='comma'>,</span>
+    <span class='label'>transaction_type:</span> <span class='ivar'>@transaction_type</span>
+  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -722,7 +903,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Feb  1 15:17:05 2019 by
+  Generated on Tue Feb  5 12:51:34 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.18 (ruby-2.3.3).
 </div>
