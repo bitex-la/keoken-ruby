@@ -1,16 +1,20 @@
 module Keoken
-  class Token
-    attr_accessor :data_script, :name, :id, :amount, :transaction_type
+  class Token < Parser
+    attr_accessor :data_script, :id
 
     # Creates a new token object.
     #
     # @param options [Hash] options parameters to create the token.
     # @option options [String] :name The name of token to create.
     # @option options [Number] :id The id of token to obtain an amount to send to another address.
+    # @option options [String] :script An hexadecimal script intended to be parsed.
     #
     def initialize(options = {})
       @name   = options[:name]
       @id     = options[:id]
+      return unless options[:script]
+      super(options[:script])
+      parse_script
     end
 
     # Generate the script to create a token.
@@ -26,7 +30,7 @@ module Keoken
           Keoken::VERSION_NODE,
           Keoken::TYPE_CREATE_ASSET,
           name_to_hex(@name),
-          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s
+          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s(16)
         ].flatten.join
       self
     end
@@ -45,7 +49,7 @@ module Keoken
           Keoken::VERSION_NODE,
           Keoken::TYPE_SEND_TOKEN,
           Keoken::PREFIX_BYTE_ASSET_ID[0..asset_length] + @id.to_s,
-          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s
+          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s(16)
         ].flatten.join
       self
     end
@@ -86,18 +90,6 @@ module Keoken
       }
     end
 
-    def parse_script(script)
-      parser = Keoken::Parser.new(script)
-      parser.prefix
-      @transaction_type = parser.set_transaction_type
-      if @transaction_type == :create
-        @name = parser.name_or_id
-      else
-        @id = parser.name_or_id
-      end
-      @amount = parser.amount
-    end
-
     private
 
     def data_length
@@ -111,6 +103,18 @@ module Keoken
     def name_to_hex(name)
       asset_bytes = name.bytes.map { |n| n.to_s(16) }
       asset_bytes + ['00']
+    end
+
+    def parse_script
+      prefix
+      @transaction_type = set_transaction_type
+      if @transaction_type == :create
+        @name = name_or_id
+      else
+        @id = name_or_id
+      end
+      @amount = set_amount
+      self
     end
   end
 end

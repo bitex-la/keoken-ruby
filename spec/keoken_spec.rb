@@ -21,21 +21,19 @@ describe Keoken do
     token = Keoken::Token.new(name: 'test-keoken')
     token.create(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+      eq('6a0400004b501700000000746573742d6b656f6b656e00000000000f4240')
     )
   end
 
   it 'serialize the test-keoken token' do
-    token = Keoken::Token.new
-    token.parse_script('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+    token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
     expect(token.to_json).to(
       eq('{"id":null,"name":"test-keoken","amount":1000000,"transaction_type":"create"}')
     )
   end
 
   it 'deserialize the test-keoken token' do
-    token = Keoken::Token.new
-    token.parse_script('6a0400004b501800000000746573742d6b656f6b656e000000000001000000')
+    token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
     expect(token.to_hash).to(
       eq(
         amount: 1_000_000,
@@ -47,14 +45,25 @@ describe Keoken do
   end
 
   it 'deserialize the token with id' do
-    token = Keoken::Token.new
-    token.parse_script('6a0400004b501000000001000000340000000001000000')
+    token = Keoken::Token.new(script: '6a0400004b5010000000010000003400000000000f4240')
     expect(token.to_hash).to(
       eq(
         amount: 1_000_000,
         name: nil,
         id: '34',
         transaction_type: :send
+      )
+    )
+  end
+
+  it 'deserialize the Bitprim token' do
+    token = Keoken::Token.new(script: '6a0400004b5014000000004269747072696d0000000000000f4240')
+    expect(token.to_hash).to(
+      eq(
+        amount: 1_000_000,
+        name: 'Bitprim',
+        id: nil,
+        transaction_type: :create
       )
     )
   end
@@ -73,7 +82,7 @@ describe Keoken do
     token = Keoken::Token.new(id: 34)
     token.send_amount(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b501000000001000000340000000001000000')
+      eq('6a0400004b50f0000000100000034000000000f4240')
     )
   end
 
@@ -100,7 +109,7 @@ describe Keoken do
             },
             {
               "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e000000000001000000",
+              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e00000000000f4240",
             },
           ]
         )
@@ -110,7 +119,7 @@ describe Keoken do
     it 'raw transaction' do
       raw = @transaction_token.raw
       expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006')
-      expect(raw).to end_with('6a0400004b501800000000746573742d6b656f6b656e00000000000100000000000000')
+      expect(raw).to end_with('6a0400004b501700000000746573742d6b656f6b656e00000000000f424000000000')
     end
 
     it 'broadcast transaction' do
@@ -162,17 +171,17 @@ describe Keoken do
             },
             {
               "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 00000001000001230000000000500000",
+              "scriptPubKey" => "OP_RETURN 00004b50 000000010000012300000000007a1200",
             },
           ]
         )
       )
     end
 
-    it "raw transaction" do
+    it 'raw transaction' do
       raw = @transaction_token.raw
-      expect(raw).to start_with("0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a4401000000")
-      expect(raw).to end_with("6a0400004b50100000000100000123000000000050000000000000")
+      expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a4401000000')
+      expect(raw).to end_with('6a0400004b5010000000010000012300000000007a120000000000')
     end
   end
 end
