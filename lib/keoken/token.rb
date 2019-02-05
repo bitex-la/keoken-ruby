@@ -24,7 +24,7 @@ module Keoken
     # @return [Keoken::Token] An object with the data needed to crate the token.
     #
     def create(amount)
-      raise Keoken::NameNotFound unless @name
+      raise Keoken::Error::NameNotFound unless @name
       @data_script =
         [
           Keoken::VERSION_NODE,
@@ -42,7 +42,7 @@ module Keoken
     # @return [Keoken::Token] An object with the data needed to send the amount.
     #
     def send_amount(amount)
-      raise Keoken::IdNotFound unless @id
+      raise Keoken::Error::IdNotFound unless @id
       asset_length = Keoken::ASSET_ID_SIZE - @id.to_s.length - 1
       @data_script =
         [

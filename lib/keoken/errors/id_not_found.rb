@@ -1,7 +1,9 @@
 module Keoken
-  class IdNotFound < StandardError
-    def initialize(msg = 'Missing id')
-      super
+  module Error
+    class IdNotFound < StandardError
+      def initialize(msg = 'Missing id')
+        super
+      end
     end
   end
 end

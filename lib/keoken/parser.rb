@@ -10,11 +10,11 @@ module Keoken
 
     # rubocop:disable Metrics/AbcSize
     def prefix
-      raise Keoken::DataNotParsed, 'OP_RETURN missing' unless @data.slice!(0) == Bitcoin::Script::OP_RETURN.to_i
-      raise Keoken::DataNotParsed, 'Prefix size missing' unless @data.slice!(0) == Keoken::PREFIX_SIZE.to_i
+      raise Keoken::Error::DataNotParsed, 'OP_RETURN missing' unless @data.slice!(0) == Bitcoin::Script::OP_RETURN.to_i
+      raise Keoken::Error::DataNotParsed, 'Prefix size missing' unless @data.slice!(0) == Keoken::PREFIX_SIZE.to_i
       result = @data.slice!(0..Keoken::PREFIX.htb.bytes.length - 1)
-      raise Keoken::DataNotParsed, 'Prefix not provided' unless result == Keoken::PREFIX.htb.bytes
-      raise Keoken::DataNotParsed, 'Bytesize not provided' unless @data.slice!(0) == @data.length
+      raise Keoken::Error::DataNotParsed, 'Prefix not provided' unless result == Keoken::PREFIX.htb.bytes
+      raise Keoken::Error::DataNotParsed, 'Bytesize not provided' unless @data.slice!(0) == @data.length
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -26,7 +26,7 @@ module Keoken
         elsif result == Keoken::TYPE_SEND_TOKEN
           :send
         else
-          raise Keoken::DataNotParsed, 'Transaction type not valid'
+          raise Keoken::Error::DataNotParsed, 'Transaction type not valid'
         end
       @transaction_type
     end
@@ -35,7 +35,7 @@ module Keoken
       name = []
       end_of_name = false
       loop do
-        tmp = @data.slice!(0)
+        (tmp = @data.slice!(0)) || break
         end_of_name ||= tmp > 0
         next if tmp.zero? && !end_of_name
         break if tmp.zero? && end_of_name

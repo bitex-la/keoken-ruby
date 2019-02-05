@@ -25,57 +25,14 @@ describe Keoken do
     )
   end
 
-  it 'serialize the test-keoken token' do
-    token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
-    expect(token.to_json).to(
-      eq('{"id":null,"name":"test-keoken","amount":1000000,"transaction_type":"create"}')
-    )
-  end
-
-  it 'deserialize the test-keoken token' do
-    token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
-    expect(token.to_hash).to(
-      eq(
-        amount: 1_000_000,
-        name: 'test-keoken',
-        id: nil,
-        transaction_type: :create
-      )
-    )
-  end
-
-  it 'deserialize the token with id' do
-    token = Keoken::Token.new(script: '6a0400004b5010000000010000003400000000000f4240')
-    expect(token.to_hash).to(
-      eq(
-        amount: 1_000_000,
-        name: nil,
-        id: '34',
-        transaction_type: :send
-      )
-    )
-  end
-
-  it 'deserialize the Bitprim token' do
-    token = Keoken::Token.new(script: '6a0400004b5014000000004269747072696d0000000000000f4240')
-    expect(token.to_hash).to(
-      eq(
-        amount: 1_000_000,
-        name: 'Bitprim',
-        id: nil,
-        transaction_type: :create
-      )
-    )
-  end
-
   it 'raise an error when name is not provided' do
     token = Keoken::Token.new
-    expect { token.create(1_000_000) }.to raise_error(Keoken::NameNotFound)
+    expect { token.create(1_000_000) }.to raise_error(Keoken::Error::NameNotFound)
   end
 
   it 'raise an error when id is not provided' do
     token = Keoken::Token.new
-    expect { token.send_amount(1_000_000) }.to raise_error(Keoken::IdNotFound)
+    expect { token.send_amount(1_000_000) }.to raise_error(Keoken::Error::IdNotFound)
   end
 
   it 'send 1_000_000 to token with 34 id' do
@@ -84,6 +41,59 @@ describe Keoken do
     expect(token.hex).to(
       eq('6a0400004b50f0000000100000034000000000f4240')
     )
+  end
+
+  describe 'parsing' do
+    it 'serialize the test-keoken token' do
+      token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
+      expect(token.to_json).to(
+        eq('{"id":null,"name":"test-keoken","amount":1000000,"transaction_type":"create"}')
+      )
+    end
+
+    it 'deserialize the test-keoken token' do
+      token = Keoken::Token.new(script: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
+      expect(token.to_hash).to(
+        eq(
+          amount: 1_000_000,
+          name: 'test-keoken',
+          id: nil,
+          transaction_type: :create
+        )
+      )
+    end
+
+    it 'deserialize the token with id' do
+      token = Keoken::Token.new(script: '6a0400004b5010000000010000003400000000000f4240')
+      expect(token.to_hash).to(
+        eq(
+          amount: 1_000_000,
+          name: nil,
+          id: '34',
+          transaction_type: :send
+        )
+      )
+    end
+
+    it 'deserialize the Bitprim token' do
+      token = Keoken::Token.new(script: '6a0400004b5014000000004269747072696d0000000000000f4240')
+      expect(token.to_hash).to(
+        eq(
+          amount: 1_000_000,
+          name: 'Bitprim',
+          id: nil,
+          transaction_type: :create
+        )
+      )
+    end
+
+    it 'raise parsing errors' do
+      expect { Keoken::Token.new(script: '') }.to raise_error(Keoken::Error::DataNotParsed)
+      expect { Keoken::Token.new(script: '6a') }.to raise_error(Keoken::Error::DataNotParsed)
+      expect { Keoken::Token.new(script: '6a04') }.to raise_error(Keoken::Error::DataNotParsed)
+      expect { Keoken::Token.new(script: '6a0400004b50') }.to raise_error(Keoken::Error::DataNotParsed)
+      expect { Keoken::Token.new(script: '6a0400004b500400000004') }.to raise_error(Keoken::Error::DataNotParsed)
+    end
   end
 
   describe 'creates token' do
