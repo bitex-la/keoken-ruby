@@ -79,7 +79,7 @@ module Keoken
       private
 
       def root_node_url
-        file = YAML.load_file('lib/keoken/bitprim/config.yaml')
+        file = YAML.load_file(check_for_path)
         if ENV['KEOKEN_NODE'] == 'PRODUCTION'
           file['Bitprim']['node']['mainnet']['url']
         else
@@ -88,12 +88,18 @@ module Keoken
       end
 
       def root_keoken_url
-        file = YAML.load_file('lib/keoken/bitprim/config.yaml')
+        file = YAML.load_file(check_for_path)
         if ENV['KEOKEN_NODE'] == 'PRODUCTION'
           file['Bitprim']['keoken']['mainnet']['url']
         else
           file['Bitprim']['keoken']['testnet']['url']
         end
+      end
+
+      def check_for_path
+        path = 'config/keoken.yaml'
+        return path if File.file?(path)
+        "#{Gem.loaded_specs['keoken'].full_gem_path}/lib/keoken/bitprim/config.yaml"
       end
     end
   end
