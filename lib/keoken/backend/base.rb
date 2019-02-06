@@ -21,7 +21,7 @@ module Keoken
               addresses.any? { |vout_address| vout_address == address }
             end
           end
-          raise Keoken::OutputNotFound if outputs.empty?
+          raise Keoken::Error::OutputNotFound if outputs.empty?
           output = outputs.first
           @inputs.push(
             tx_id: txid,
