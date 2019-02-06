@@ -217,7 +217,7 @@ describe Keoken do
           outputs:
             [
               {
-                address: '17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX',
+                address: 'bitcoincash:qpxrq63y6kz2wphm2nfsh6z23yvjmz7avcc5wsgruw',
                 amount: 8757229,
                 script_type: 'PAYTOADDRESS'
               },

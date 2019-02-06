@@ -1,4 +1,5 @@
 require 'bitcoin'
+require 'cashaddress'
 
 require 'keoken/errors/id_not_found'
 require 'keoken/errors/name_not_found'

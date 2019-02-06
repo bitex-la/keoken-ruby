@@ -1,7 +1,13 @@
+GIT
+  remote: https://github.com/werner/cashaddress-ruby
+  revision: f4759db43b9d0657e8533256712017dd13a0bc16
+  specs:
+    cashaddress (0.1.0)
+
 PATH
   remote: .
   specs:
-    keoken (0.2.4)
+    keoken (0.2.5)
       bitcoin-ruby (~> 0.0.18)
 
 GEM
@@ -43,6 +49,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.11)
   byebug (~> 10)
+  cashaddress (~> 0.1.0)!
   ffi (~> 1.9)
   keoken!
   rake (~> 12)

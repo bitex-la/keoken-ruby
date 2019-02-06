@@ -40,7 +40,7 @@ module Keoken
 
         def create(inputs, path, address, output_amount, script)
           {
-            inputs: 
+            inputs:
               inputs.map do |input|
                 {
                   address_n: path,
@@ -51,7 +51,7 @@ module Keoken
               end,
             outputs: [
               {
-                address: address,
+                address: Cashaddress.from_legacy(address),
                 amount: output_amount,
                 script_type: 'PAYTOADDRESS'
               },
@@ -66,7 +66,7 @@ module Keoken
 
         def send(inputs, path, output_amount, address, output_amount_to_addr2, addr2, script)
           {
-            inputs: 
+            inputs:
               inputs.map do |input|
                 {
                   address_n: path,
@@ -77,12 +77,12 @@ module Keoken
               end,
             outputs: [
               {
-                address: address,
+                address: Cashaddress.from_legacy(address),
                 amount: output_amount,
                 script_type: 'PAYTOADDRESS'
               },
               {
-                address: addr2,
+                address: Cashaddress.from_legacy(addr2),
                 amount: output_amount_to_addr2,
                 script_type: 'PAYTOADDRESS'
               },
