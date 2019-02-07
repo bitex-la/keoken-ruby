@@ -43,12 +43,12 @@ module Keoken
     #
     def send_amount(amount)
       raise Keoken::Error::IdNotFound unless @id
-      asset_length = Keoken::ASSET_ID_SIZE - @id.to_s.length - 1
+      asset_length = Keoken::ASSET_ID_SIZE - @id.to_s.length
       @data_script =
         [
           Keoken::VERSION_NODE,
           Keoken::TYPE_SEND_TOKEN,
-          Keoken::PREFIX_BYTE_ASSET_ID[0..asset_length] + @id.to_s,
+          Keoken::PREFIX_BYTE_ASSET_ID[0..(asset_length - 1)] + @id.to_s,
           Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s(16)
         ].flatten.join
       self
@@ -97,7 +97,7 @@ module Keoken
     end
 
     def prefix_length(amount)
-      Keoken::AMOUNT_SIZE - amount.to_s.length - 1
+      Keoken::AMOUNT_SIZE - (amount.to_s(16).length + 1)
     end
 
     def name_to_hex(name)

@@ -21,7 +21,15 @@ describe Keoken do
     token = Keoken::Token.new(name: 'test-keoken')
     token.create(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b501700000000746573742d6b656f6b656e00000000000f4240')
+      eq('6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240')
+    )
+  end
+
+  it 'creates the Bitprim token' do
+    token = Keoken::Token.new(name: 'Bitprim')
+    token.create(1_000_000)
+    expect(token.hex).to(
+      eq('6a0400004b5014000000004269747072696d0000000000000f4240')
     )
   end
 
@@ -35,11 +43,19 @@ describe Keoken do
     expect { token.send_amount(1_000_000) }.to raise_error(Keoken::Error::IdNotFound)
   end
 
+  it 'send 100 to token with 2 id' do
+    token = Keoken::Token.new(id: 2)
+    token.send_amount(100)
+    expect(token.hex).to(
+      eq('6a0400004b501000000001000000020000000000000064')
+    )
+  end
+
   it 'send 1_000_000 to token with 34 id' do
     token = Keoken::Token.new(id: 34)
     token.send_amount(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b50f0000000100000034000000000f4240')
+      eq('6a0400004b5010000000010000003400000000000f4240')
     )
   end
 
@@ -119,7 +135,7 @@ describe Keoken do
             },
             {
               "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e00000000000f4240",
+              "scriptPubKey" => "OP_RETURN 00004b50 00000000746573742d6b656f6b656e0000000000000f4240",
             },
           ]
         )
@@ -129,7 +145,7 @@ describe Keoken do
     it 'raw transaction' do
       raw = @transaction_token.raw
       expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a44010000006')
-      expect(raw).to end_with('6a0400004b501700000000746573742d6b656f6b656e00000000000f424000000000')
+      expect(raw).to end_with('6a0400004b501800000000746573742d6b656f6b656e0000000000000f424000000000')
     end
 
     it 'broadcast transaction' do
@@ -166,23 +182,23 @@ describe Keoken do
       @transaction_token.build_for_send_amount(key.addr, 'mnTd41YZ1e1YqsaPNJh3wkeSUrFvp1guzi', key, script)
     end
 
-    it "format to_json" do
+    it 'format to_json' do
       json = JSON.parse(@transaction_token.to_json)
-      expect(json["out"]).to(
+      expect(json['out']).to(
         eq(
           [
             {
-              "value" => "0.00117415",
-              "scriptPubKey" => "OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG",
+              'value' => '0.00117415',
+              'scriptPubKey' => 'OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG',
             },
             {
-              "value" => "0.08751169",
-              "scriptPubKey" => "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG",
+              'value' => '0.08751169',
+              'scriptPubKey' => 'OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG',
             },
             {
-              "value" => "0.00000000",
-              "scriptPubKey" => "OP_RETURN 00004b50 000000010000012300000000007a1200",
-            },
+              'value' => '0.00000000',
+              'scriptPubKey' => 'OP_RETURN 00004b50 0000000100000123000000000007a120'
+            }
           ]
         )
       )
@@ -191,7 +207,7 @@ describe Keoken do
     it 'raw transaction' do
       raw = @transaction_token.raw
       expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a4401000000')
-      expect(raw).to end_with('6a0400004b5010000000010000012300000000007a120000000000')
+      expect(raw).to end_with('6a0400004b50100000000100000123000000000007a12000000000')
     end
   end
   
@@ -223,7 +239,7 @@ describe Keoken do
               },
               {
                 amount: '0',
-                op_return_data: '6a0400004b501700000000746573742d6b656f6b656e00000000000f4240',
+                op_return_data: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240',
                 script_type: 'PAYTOOPRETURN'
               }
             ]
