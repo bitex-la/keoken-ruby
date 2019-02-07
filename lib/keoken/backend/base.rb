@@ -18,9 +18,7 @@ module Keoken
           transaction = bitprim_transaction.tx(txid)
           outputs = transaction['vout'].select do |vout|
             addresses = vout['scriptPubKey']['addresses']
-            if addresses
-              addresses.any? { |vout_address| vout_address == address }
-            end
+            addresses.any? { |vout_address| vout_address == address } if addresses
           end
           raise Keoken::Error::OutputNotFound if outputs.empty?
           output = outputs.first
