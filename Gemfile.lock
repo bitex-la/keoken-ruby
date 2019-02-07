@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    keoken (0.2.5)
+    keoken (0.2.6)
       bitcoin-ruby (~> 0.0.18)
 
 GEM

@@ -46,13 +46,13 @@ module Keoken
                   address_n: path,
                   prev_index: input[:position],
                   prev_hash: input[:tx_id],
-                  amount: input[:input_amount]
+                  amount: input[:input_amount].to_s
                 }
               end,
             outputs: [
               {
                 address: Cashaddress.from_legacy(address),
-                amount: output_amount,
+                amount: output_amount.to_s,
                 script_type: 'PAYTOADDRESS'
               },
               {
@@ -72,18 +72,18 @@ module Keoken
                   address_n: path,
                   prev_index: input[:position],
                   prev_hash: input[:tx_id],
-                  amount: input[:input_amount]
+                  amount: input[:input_amount].to_s
                 }
               end,
             outputs: [
               {
                 address: Cashaddress.from_legacy(address),
-                amount: output_amount,
+                amount: output_amount.to_s,
                 script_type: 'PAYTOADDRESS'
               },
               {
                 address: Cashaddress.from_legacy(addr2),
-                amount: output_amount_to_addr2,
+                amount: output_amount_to_addr2.to_s,
                 script_type: 'PAYTOADDRESS'
               },
               {

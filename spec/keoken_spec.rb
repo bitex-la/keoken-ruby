@@ -209,7 +209,7 @@ describe Keoken do
             [
               {
                 address_n: [44, 145, 0, 0, 0],
-                amount: 8985999,
+                amount: '8985999',
                 prev_hash: '448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da',
                 prev_index: 1
               }
@@ -218,7 +218,7 @@ describe Keoken do
             [
               {
                 address: 'bitcoincash:qpxrq63y6kz2wphm2nfsh6z23yvjmz7avcc5wsgruw',
-                amount: 8757229,
+                amount: '8757229',
                 script_type: 'PAYTOADDRESS'
               },
               {
