@@ -210,8 +210,8 @@ describe Keoken do
       expect(raw).to end_with('6a0400004b50100000000100000123000000000007a12000000000')
     end
   end
-  
-  describe 'creates token with Trezor' do
+
+  describe 'Trezor' do
     it 'creates token' do
       mock_requests
       allow(ENV).to receive(:[]).with('KEOKEN_NODE').and_return('PRODUCTION')
@@ -240,6 +240,85 @@ describe Keoken do
               {
                 amount: '0',
                 op_return_data: '6a0400004b501800000000746573742d6b656f6b656e0000000000000f4240',
+                script_type: 'PAYTOOPRETURN'
+              }
+            ]
+        )
+      )
+    end
+
+    it 'sends token' do
+      mock_requests
+      allow(ENV).to receive(:[]).with('KEOKEN_NODE').and_return('PRODUCTION')
+      token = Keoken::Token.new(id: 86)
+      token.send_amount(456_342)
+      script = token.hex
+      @transaction_token = Keoken::Backend::Trezor::Transaction.new
+      expect(
+        @transaction_token.build_for_send_amount(
+          '17wrMVCa9EJUVVEC3c5CZZanjT1NtWU2mX',
+          '32tM1kKxnTzcJugmGsavg5MnsJiNZfUUzQ',
+          [44, 145, 0, 0, 0],
+          script,
+          ['ypub6WrVGzkKFeNTTppAVe2KkY3yiohKNvFDZm7qAFKBAu8ozm2DYRmwoXwpQUAaEbLkCJmdGaYBLxBUbJcfeLZcwXEtF9neUCDXuWtVyFDApi6',
+           'ypub6WtFU3UPzgvu1AJzw9Quw6TgNp7FM5ro2AZwcwmkgP4HvdurTiGRSDYKV4YaofGny96xFykeNxJGgt8SiNwhFnBbdmwyiiLVRxoKWTeQnuB']
+        )
+      ).to(
+        eq(
+          inputs:
+            [
+              {
+                address_n: [44, 145, 0, 0, 0],
+                amount: '8985999',
+                multisig: {
+                  m: 2,
+                  pubkeys:
+                    [
+                      {
+                        address_n: [44, 145, 0, 0, 0],
+                        node:
+                          {
+                            chain_code: '7bd6545bf255444ba4cf93b893e56deacf59e0b8e065d44673e9afff4e3655c6',
+                            child_num: 0,
+                            depth: 0,
+                            fingerprint: 0,
+                            public_key: '03db551b0f0962d4cbbf15b6d81dd7dc0e82868867182ec15b1e5e28b90fac97c4'
+                          }
+                      },
+                      {
+                        address_n: [44, 145, 0, 0, 0],
+                        node:
+                          {
+                            chain_code: '4199329ed001a33fb58fd75bac23c80c0d38cedc009bac8f89c89df91c35bc8e',
+                            child_num: 0,
+                            depth: 0,
+                            fingerprint: 0,
+                            public_key: '02408f31733a184b6d0dd52a0800bf1a6b02102b9bfcc9c158b508365869c8c73d'
+                          }
+                      }
+                    ],
+                  signatures: ['', '', '']
+                },
+                prev_hash: '448a9356f6317eeaa9581f9a39d41431ac74aa2b73438c01e1d522543d14e8da',
+                prev_index: 1,
+                script_type: 'SPENDMULTISIG'
+              }
+            ],
+          outputs:
+            [
+              {
+                address: 'bitcoincash:qpxrq63y6kz2wphm2nfsh6z23yvjmz7avcc5wsgruw',
+                amount: '8756231',
+                script_type: 'PAYTOADDRESS'
+              },
+              {
+                address: 'bitcoincash:pqx3eghuvc7kmc4qkwg0qwfjqyedh3wg8qkwanr9pd',
+                amount: '114884',
+                script_type: 'PAYTOADDRESS'
+              },
+              {
+                amount: '0',
+                op_return_data: '6a0400004b50100000000100000086000000000006f696',
                 script_type: 'PAYTOOPRETURN'
               }
             ]

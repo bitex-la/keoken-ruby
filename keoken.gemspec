@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
 
   s.add_dependency 'bitcoin-ruby', '~> 0.0.18'
+  s.add_dependency 'money-tree', '~> 0.10.0'
 
   s.add_development_dependency "bundler", "~> 1.11"
   s.add_development_dependency "rake", "~> 12"

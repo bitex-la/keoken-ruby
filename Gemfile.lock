@@ -7,8 +7,9 @@ GIT
 PATH
   remote: .
   specs:
-    keoken (0.2.8)
+    keoken (0.3.0)
       bitcoin-ruby (~> 0.0.18)
+      money-tree (~> 0.10.0)
 
 GEM
   remote: https://rubygems.org/
@@ -22,6 +23,8 @@ GEM
     diff-lcs (1.3)
     ffi (1.9.25)
     hashdiff (0.3.2)
+    money-tree (0.10.0)
+      ffi
     public_suffix (3.0.3)
     rake (12.3.2)
     rspec (3.8.0)

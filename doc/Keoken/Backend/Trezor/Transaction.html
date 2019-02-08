@@ -140,7 +140,7 @@
   
   
   <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="../Base.html" title="Keoken::Backend::Base (class)">Base</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../Base.html#bitprim_transaction-instance_method" title="Keoken::Backend::Base#bitprim_transaction (method)">#bitprim_transaction</a></span>, <span class='object_link'><a href="../Base.html#inputs-instance_method" title="Keoken::Backend::Base#inputs (method)">#inputs</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="../Base.html#bitprim_transaction-instance_method" title="Keoken::Backend::Base#bitprim_transaction (method)">#bitprim_transaction</a></span>, <span class='object_link'><a href="../Base.html#inputs-instance_method" title="Keoken::Backend::Base#inputs (method)">#inputs</a></span>, <span class='object_link'><a href="../Base.html#total_inputs_amount-instance_method" title="Keoken::Backend::Base#total_inputs_amount (method)">#total_inputs_amount</a></span></p>
 
 
   
@@ -154,7 +154,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#build_for_creation-instance_method" title="#build_for_creation (instance method)">#<strong>build_for_creation</strong>(address, path, script)  &#x21d2; Keoken::Backend::Trezor::Transaction </a>
+      <a href="#build_for_creation-instance_method" title="#build_for_creation (instance method)">#<strong>build_for_creation</strong>(address, path, script, xpubs = [])  &#x21d2; Keoken::Backend::Trezor::Transaction </a>
     
 
     
@@ -176,7 +176,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#build_for_send_amount-instance_method" title="#build_for_send_amount (instance method)">#<strong>build_for_send_amount</strong>(address, address_dest, path, script)  &#x21d2; Keoken::Backend::Trezor::Transaction </a>
+      <a href="#build_for_send_amount-instance_method" title="#build_for_send_amount (instance method)">#<strong>build_for_send_amount</strong>(address, address_dest, path, script, xpubs = [])  &#x21d2; Keoken::Backend::Trezor::Transaction </a>
     
 
     
@@ -245,12 +245,12 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+7
+8
+9</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 7</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_json'>to_json</span>
   <span class='ivar'>@to_json</span>
@@ -270,7 +270,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="build_for_creation-instance_method">
   
-    #<strong>build_for_creation</strong>(address, path, script)  &#x21d2; <tt><span class='object_link'><a href="" title="Keoken::Backend::Trezor::Transaction (class)">Keoken::Backend::Trezor::Transaction</a></span></tt> 
+    #<strong>build_for_creation</strong>(address, path, script, xpubs = [])  &#x21d2; <tt><span class='object_link'><a href="" title="Keoken::Backend::Trezor::Transaction (class)">Keoken::Backend::Trezor::Transaction</a></span></tt> 
   
 
   
@@ -328,6 +328,22 @@
       
     </li>
   
+    <li>
+      
+        <span class='name'>xpubs</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>The xpubs corresponding to the multisig address.</div>
+      
+    </li>
+  
 </ul>
 
 <p class="tag_title">Returns:</p>
@@ -353,21 +369,21 @@
       <pre class="lines">
 
 
-15
-16
-17
 18
 19
-20</pre>
+20
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 18</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_build_for_creation'>build_for_creation</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_build_for_creation'>build_for_creation</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='id identifier rubyid_xpubs'>xpubs</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_build_inputs'>build_inputs</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_total'>total</span><span class='comma'>,</span> <span class='id identifier rubyid_fee'>fee</span> <span class='op'>=</span> <span class='id identifier rubyid_build_fee'>build_fee</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_total'>total</span><span class='comma'>,</span> <span class='id identifier rubyid_fee'>fee</span> <span class='op'>=</span> <span class='id identifier rubyid_build_fee'>build_fee</span><span class='lparen'>(</span><span class='symbol'>:create</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_output_amount'>output_amount</span> <span class='op'>=</span> <span class='id identifier rubyid_total'>total</span> <span class='op'>-</span> <span class='id identifier rubyid_fee'>fee</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
-  <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='ivar'>@inputs</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount'>output_amount</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='ivar'>@inputs</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount'>output_amount</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='id identifier rubyid_xpubs'>xpubs</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -377,7 +393,7 @@
       <div class="method_details ">
   <h3 class="signature " id="build_for_send_amount-instance_method">
   
-    #<strong>build_for_send_amount</strong>(address, address_dest, path, script)  &#x21d2; <tt><span class='object_link'><a href="" title="Keoken::Backend::Trezor::Transaction (class)">Keoken::Backend::Trezor::Transaction</a></span></tt> 
+    #<strong>build_for_send_amount</strong>(address, address_dest, path, script, xpubs = [])  &#x21d2; <tt><span class='object_link'><a href="" title="Keoken::Backend::Trezor::Transaction (class)">Keoken::Backend::Trezor::Transaction</a></span></tt> 
   
 
   
@@ -449,6 +465,22 @@
       
     </li>
   
+    <li>
+      
+        <span class='name'>xpubs</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>The xpubs corresponding to the multisig address.</div>
+      
+    </li>
+  
 </ul>
 
 <p class="tag_title">Returns:</p>
@@ -474,23 +506,23 @@
       <pre class="lines">
 
 
-31
-32
-33
-34
 35
 36
-37</pre>
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/keoken/backend/trezor/transaction.rb', line 35</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_build_for_send_amount'>build_for_send_amount</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_address_dest'>address_dest</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_build_for_send_amount'>build_for_send_amount</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_address_dest'>address_dest</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='id identifier rubyid_xpubs'>xpubs</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_build_inputs'>build_inputs</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_total'>total</span><span class='comma'>,</span> <span class='id identifier rubyid_fee'>fee</span> <span class='op'>=</span> <span class='id identifier rubyid_build_fee'>build_fee</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_total'>total</span><span class='comma'>,</span> <span class='id identifier rubyid_fee'>fee</span> <span class='op'>=</span> <span class='id identifier rubyid_build_fee'>build_fee</span><span class='lparen'>(</span><span class='symbol'>:send</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_output_amount'>output_amount</span> <span class='op'>=</span> <span class='id identifier rubyid_total'>total</span> <span class='op'>-</span> <span class='lparen'>(</span><span class='id identifier rubyid_fee'>fee</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>*</span> <span class='int'>2</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_output_amount_to_addr2'>output_amount_to_addr2</span> <span class='op'>=</span> <span class='id identifier rubyid_fee'>fee</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
-  <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='ivar'>@inputs</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount'>output_amount</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount_to_addr2'>output_amount_to_addr2</span><span class='comma'>,</span> <span class='id identifier rubyid_address_dest'>address_dest</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='ivar'>@inputs</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount'>output_amount</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_output_amount_to_addr2'>output_amount_to_addr2</span><span class='comma'>,</span> <span class='id identifier rubyid_address_dest'>address_dest</span><span class='comma'>,</span> <span class='id identifier rubyid_script'>script</span><span class='comma'>,</span> <span class='id identifier rubyid_xpubs'>xpubs</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -502,7 +534,7 @@
 </div>
 
       <div id="footer">
-  Generated on Tue Feb  5 12:51:34 2019 by
+  Generated on Fri Feb  8 14:51:35 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.18 (ruby-2.3.3).
 </div>

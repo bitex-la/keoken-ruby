@@ -582,7 +582,7 @@
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="NameNotFound.html" title="Keoken::NameNotFound (class)">Keoken::NameNotFound</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Error/NameNotFound.html" title="Keoken::Error::NameNotFound (class)">Keoken::Error::NameNotFound</a></span></tt>)</span>
       
       
       
@@ -612,7 +612,7 @@
       <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="NameNotFound.html" title="Keoken::NameNotFound (class)">NameNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@name</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html" title="Keoken::Error (module)">Error</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error/NameNotFound.html" title="Keoken::Error::NameNotFound (class)">NameNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@name</span>
   <span class='ivar'>@data_script</span> <span class='op'>=</span>
     <span class='lbracket'>[</span>
       <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
@@ -749,7 +749,7 @@
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="IdNotFound.html" title="Keoken::IdNotFound (class)">Keoken::IdNotFound</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Error/IdNotFound.html" title="Keoken::Error::IdNotFound (class)">Keoken::Error::IdNotFound</a></span></tt>)</span>
       
       
       
@@ -780,13 +780,13 @@
       <pre class="code"><span class="info file"># File 'lib/keoken/token.rb', line 44</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_send_amount'>send_amount</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="IdNotFound.html" title="Keoken::IdNotFound (class)">IdNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@id</span>
-  <span class='id identifier rubyid_asset_length'>asset_length</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#ASSET_ID_SIZE-constant" title="Keoken::ASSET_ID_SIZE (constant)">ASSET_ID_SIZE</a></span></span> <span class='op'>-</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html" title="Keoken::Error (module)">Error</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error/IdNotFound.html" title="Keoken::Error::IdNotFound (class)">IdNotFound</a></span></span> <span class='kw'>unless</span> <span class='ivar'>@id</span>
+  <span class='id identifier rubyid_asset_length'>asset_length</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#ASSET_ID_SIZE-constant" title="Keoken::ASSET_ID_SIZE (constant)">ASSET_ID_SIZE</a></span></span> <span class='op'>-</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
   <span class='ivar'>@data_script</span> <span class='op'>=</span>
     <span class='lbracket'>[</span>
       <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#VERSION_NODE-constant" title="Keoken::VERSION_NODE (constant)">VERSION_NODE</a></span></span><span class='comma'>,</span>
       <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#TYPE_SEND_TOKEN-constant" title="Keoken::TYPE_SEND_TOKEN (constant)">TYPE_SEND_TOKEN</a></span></span><span class='comma'>,</span>
-      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_ASSET_ID-constant" title="Keoken::PREFIX_BYTE_ASSET_ID (constant)">PREFIX_BYTE_ASSET_ID</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_asset_length'>asset_length</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span>
+      <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_ASSET_ID-constant" title="Keoken::PREFIX_BYTE_ASSET_ID (constant)">PREFIX_BYTE_ASSET_ID</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='lparen'>(</span><span class='id identifier rubyid_asset_length'>asset_length</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span>
       <span class='const'><span class='object_link'><a href="../Keoken.html" title="Keoken (module)">Keoken</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Keoken.html#PREFIX_BYTE_AMOUNT-constant" title="Keoken::PREFIX_BYTE_AMOUNT (constant)">PREFIX_BYTE_AMOUNT</a></span></span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_prefix_length'>prefix_length</span><span class='lparen'>(</span><span class='id identifier rubyid_amount'>amount</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_amount'>amount</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
     <span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
   <span class='kw'>self</span>
@@ -903,7 +903,7 @@ return [String] JSON serialization of token object.
 </div>
 
       <div id="footer">
-  Generated on Tue Feb  5 12:51:34 2019 by
+  Generated on Fri Feb  8 14:51:35 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.18 (ruby-2.3.3).
 </div>
