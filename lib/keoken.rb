@@ -20,6 +20,5 @@ module Keoken
   TYPE_CREATE_ASSET = '0000'.freeze
   TYPE_SEND_TOKEN = '0001'.freeze
   AMOUNT_SIZE = 16
-  PREFIX_BYTE_ASSET_ID = '00000000'.freeze
   ASSET_ID_SIZE = 8
 end

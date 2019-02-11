@@ -12,7 +12,6 @@ describe Keoken do
     expect(Keoken::TYPE_CREATE_ASSET).not_to be nil
     expect(Keoken::TYPE_SEND_TOKEN).not_to be nil
     expect(Keoken::AMOUNT_SIZE).not_to be nil
-    expect(Keoken::PREFIX_BYTE_ASSET_ID).not_to be nil
     expect(Keoken::ASSET_ID_SIZE).not_to be nil
   end
 
@@ -54,7 +53,7 @@ describe Keoken do
     token = Keoken::Token.new(id: 34)
     token.send_amount(1_000_000)
     expect(token.hex).to(
-      eq('6a0400004b5010000000010000003400000000000f4240')
+      eq('6a0400004b5010000000010000002200000000000f4240')
     )
   end
 
@@ -196,7 +195,7 @@ describe Keoken do
             },
             {
               'value' => '0.00000000',
-              'scriptPubKey' => 'OP_RETURN 00004b50 0000000100000123000000000007a120'
+              'scriptPubKey' => 'OP_RETURN 00004b50 000000010000007b000000000007a120'
             }
           ]
         )
@@ -206,7 +205,7 @@ describe Keoken do
     it 'raw transaction' do
       raw = @transaction_token.raw
       expect(raw).to start_with('0100000001dae8143d5422d5e1018c43732baa74ac3114d4399a1f58a9ea7e31f656938a4401000000')
-      expect(raw).to end_with('6a0400004b50100000000100000123000000000007a12000000000')
+      expect(raw).to end_with('6a0400004b5010000000010000007b000000000007a12000000000')
     end
   end
 
@@ -317,7 +316,7 @@ describe Keoken do
               },
               {
                 amount: '0',
-                op_return_data: '6a0400004b50100000000100000086000000000006f696',
+                op_return_data: '6a0400004b50100000000100000056000000000006f696',
                 script_type: 'PAYTOOPRETURN'
               }
             ]

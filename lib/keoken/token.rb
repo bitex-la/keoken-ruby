@@ -48,7 +48,7 @@ module Keoken
         [
           Keoken::VERSION_NODE,
           Keoken::TYPE_SEND_TOKEN,
-          Keoken::PREFIX_BYTE_ASSET_ID[0..(asset_length - 1)] + @id.to_s,
+          [@id.to_i].pack('L>').unpack('H*'),
           [amount.to_i].pack('q>').unpack('H*')
         ].flatten.join
       self
