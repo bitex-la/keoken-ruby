@@ -128,7 +128,7 @@ describe Keoken do
         eq(
           [
             {
-              "value" => "0.08977831",
+              "value" => "0.00008168",
               "scriptPubKey" => "OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG",
             },
             {
@@ -190,7 +190,7 @@ describe Keoken do
               'scriptPubKey' => 'OP_DUP OP_HASH160 4c2791f07c046ef21d688f12296f91ad7b44d2bb OP_EQUALVERIFY OP_CHECKSIG',
             },
             {
-              'value' => '0.08751169',
+              'value' => '0.00234830',
               'scriptPubKey' => 'OP_DUP OP_HASH160 7bb97684cc43e2f8ea0ed1d50dddce3ebf800638 OP_EQUALVERIFY OP_CHECKSIG',
             },
             {
@@ -232,7 +232,7 @@ describe Keoken do
             [
               {
                 address: 'bitcoincash:qpxrq63y6kz2wphm2nfsh6z23yvjmz7avcc5wsgruw',
-                amount: '8906080',
+                amount: '79919',
                 script_type: 'PAYTOADDRESS'
               },
               {
@@ -306,7 +306,7 @@ describe Keoken do
             [
               {
                 address: 'bitcoincash:qpxrq63y6kz2wphm2nfsh6z23yvjmz7avcc5wsgruw',
-                amount: '8756231',
+                amount: '229768',
                 script_type: 'PAYTOADDRESS'
               },
               {

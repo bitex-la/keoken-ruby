@@ -17,9 +17,8 @@ module Keoken
         #
         def build_for_creation(address, path, script, xpubs = [])
           build_inputs(address)
-          total, fee = build_fee(:create)
-          output_amount = total - fee.to_i
-          create(@inputs, path, address, output_amount, script, xpubs)
+          fee = build_fee(:create)
+          create(@inputs, path, address, fee.to_i, script, xpubs)
         end
 
         # Create the transaction to broadcast in order to send amount between tokens.
@@ -34,8 +33,8 @@ module Keoken
         #
         def build_for_send_amount(address, address_dest, path, script, xpubs = [])
           build_inputs(address)
-          total, fee = build_fee(:send)
-          output_amount = total - (fee.to_i * 2)
+          fee = build_fee(:send)
+          output_amount = fee.to_i * 2
           output_amount_to_addr2 = fee.to_i
           send(@inputs, path, output_amount, address, output_amount_to_addr2, address_dest, script, xpubs)
         end

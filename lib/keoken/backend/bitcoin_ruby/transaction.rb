@@ -42,13 +42,12 @@ module Keoken
         #
         def build(address, addr2, key, script, type)
           build_inputs(address)
-          total, fee = build_fee(type)
+          fee = build_fee(type)
           case type
           when :create
-            output_amount = total - fee.to_i
-            create(@inputs, output_amount, key.addr, key, script)
+            create(@inputs, fee.to_i, key.addr, key, script)
           when :send
-            output_amount = total - (fee.to_i * 2)
+            output_amount = fee.to_i * 2
             output_amount_to_addr2 = fee.to_i
             send_amount(@inputs, output_amount, key.addr, output_amount_to_addr2, addr2, key, script)
           end

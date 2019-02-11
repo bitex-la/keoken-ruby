@@ -1,7 +1,7 @@
 module Keoken
   module Backend
     class Base
-      attr_accessor :inputs, :bitprim_transaction, :total_inputs_amount
+      attr_accessor :inputs, :bitprim_transaction
 
       def initialize
         @inputs = []
@@ -12,7 +12,6 @@ module Keoken
 
       def build_inputs(address)
         utxos = bitprim_transaction.utxos(address)
-        @total_inputs_amount = 0
         utxos.each do |utxo|
           txid = utxo['txid']
           transaction = bitprim_transaction.tx(txid)
@@ -29,14 +28,12 @@ module Keoken
             input_script: output['scriptPubKey']['hex'],
             input_amount: amount
           )
-          @total_inputs_amount += amount
         end
       end
 
       def build_fee(type)
-        [@total_inputs_amount,
-         ((10 * @inputs.length + 35 * output_length(type)) * @bitprim_transaction.estimate_fee.to_f)
-           .to_s[0..9].sub!(/\./, '').sub!(/0+/, '')]
+        ((10 * @inputs.length + 35 * output_length(type)) * @bitprim_transaction.estimate_fee.to_f)
+           .to_s[0..9].sub!(/\./, '').sub!(/0+/, '')
       end
 
       private
