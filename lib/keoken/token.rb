@@ -30,7 +30,7 @@ module Keoken
           Keoken::VERSION_NODE,
           Keoken::TYPE_CREATE_ASSET,
           name_to_hex(@name),
-          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s(16)
+          [amount.to_i].pack('q>').unpack('H*')
         ].flatten.join
       self
     end
@@ -49,7 +49,7 @@ module Keoken
           Keoken::VERSION_NODE,
           Keoken::TYPE_SEND_TOKEN,
           Keoken::PREFIX_BYTE_ASSET_ID[0..(asset_length - 1)] + @id.to_s,
-          Keoken::PREFIX_BYTE_AMOUNT[0..prefix_length(amount)] + amount.to_s(16)
+          [amount.to_i].pack('q>').unpack('H*')
         ].flatten.join
       self
     end

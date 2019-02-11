@@ -11,7 +11,6 @@ describe Keoken do
     expect(Keoken::VERSION_NODE).not_to be nil
     expect(Keoken::TYPE_CREATE_ASSET).not_to be nil
     expect(Keoken::TYPE_SEND_TOKEN).not_to be nil
-    expect(Keoken::PREFIX_BYTE_AMOUNT).not_to be nil
     expect(Keoken::AMOUNT_SIZE).not_to be nil
     expect(Keoken::PREFIX_BYTE_ASSET_ID).not_to be nil
     expect(Keoken::ASSET_ID_SIZE).not_to be nil
