@@ -10,15 +10,14 @@ module Keoken
 
       protected
 
-      def build_inputs(address)
-        utxos = bitprim_transaction.utxos(address)
+      def build_inputs(addresses)
+        utxos = addresses.map {|address| bitprim_transaction.utxos(address) }.flatten
         @total_inputs_amount = 0
         utxos.each do |utxo|
           txid = utxo['txid']
           transaction = bitprim_transaction.tx(txid)
           outputs = transaction['vout'].select do |vout|
-            addresses = vout['scriptPubKey']['addresses']
-            addresses.any? { |vout_address| vout_address == address } if addresses
+            !(vout['scriptPubKey']['addresses'].to_a & addresses).empty?
           end
           raise Keoken::Error::OutputNotFound if outputs.empty?
           output = outputs.first

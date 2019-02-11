@@ -41,7 +41,7 @@ module Keoken
         # @return [Keoken::Backend::BitcoinRuby::Transaction] An object instanciated with the transaction to broadcast.
         #
         def build(address, addr2, key, script, type)
-          build_inputs(address)
+          build_inputs([address])
           total, fee = build_fee(type)
           case type
           when :create

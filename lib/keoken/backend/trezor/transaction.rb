@@ -16,7 +16,7 @@ module Keoken
         # @return [Keoken::Backend::Trezor::Transaction] A serialized object ready for Trezor signing.
         #
         def build_for_creation(address, path, script, xpubs = [])
-          build_inputs(address)
+          build_inputs([address])
           total, fee = build_fee(:create)
           output_amount = total - fee.to_i
           create(@inputs, path, address, output_amount, script, xpubs)
@@ -33,11 +33,29 @@ module Keoken
         # @return [Keoken::Backend::Trezor::Transaction] A serialized object ready for Trezor signing.
         #
         def build_for_send_amount(address, address_dest, path, script, xpubs = [])
-          build_inputs(address)
+          build_inputs([address])
           total, fee = build_fee(:send)
           output_amount = total - (fee.to_i * 2)
           output_amount_to_addr2 = fee.to_i
           send(@inputs, path, output_amount, address, output_amount_to_addr2, address_dest, script, xpubs)
+        end
+
+        # Create the transaction to broadcast in order to empty the wallet.
+        #
+        # @param addresses [Array] Addresses that will contain the token and will be emptied.
+        # @param address_dest [String] Address to receive the tokens.
+        # @param path [Array] Address derivation path.
+        # @param script [String] The token script.
+        # @param xpubs [Array] The xpubs corresponding to the multisig address.
+        #
+        # @return [Keoken::Backend::Trezor::Transaction] A serialized object ready for Trezor signing.
+        #
+        def build_for_empty_wallet(addresses, address_dest, path, script, xpubs = [])
+          build_inputs(addresses)
+          total, fee = build_fee(:send)
+          output_amount = total - (fee.to_i * 2)
+          output_amount_to_addr2 = fee.to_i
+          send(@inputs, path, output_amount, nil, output_amount_to_addr2, address_dest, script, xpubs)
         end
 
         private
@@ -61,14 +79,20 @@ module Keoken
         end
 
         def send(inputs, path, output_amount, address, output_amount_to_addr2, addr2, script, xpubs)
+          first_output = if address
+                           [
+                             {
+                               address: Cashaddress.from_legacy(address),
+                               amount: output_amount.to_s,
+                               script_type: 'PAYTOADDRESS'
+                             }
+                           ]
+                         else
+                           []
+                         end
           {
             inputs: build_trezor_inputs(inputs, path, address, xpubs),
-            outputs: [
-              {
-                address: Cashaddress.from_legacy(address),
-                amount: output_amount.to_s,
-                script_type: 'PAYTOADDRESS'
-              },
+            outputs: first_output.concat([
               {
                 address: Cashaddress.from_legacy(addr2),
                 amount: output_amount_to_addr2.to_s,
@@ -79,7 +103,7 @@ module Keoken
                 amount: '0',
                 script_type: 'PAYTOOPRETURN'
               }
-            ]
+            ])
           }
         end
 
@@ -124,6 +148,26 @@ module Keoken
             }
           end
         end
+
+        #def build_outputs_for_sending
+        #  outputs = 
+        #      {
+        #        address: Cashaddress.from_legacy(address),
+        #        amount: output_amount.to_s,
+        #        script_type: 'PAYTOADDRESS'
+        #      },
+        #      {
+        #        address: Cashaddress.from_legacy(addr2),
+        #        amount: output_amount_to_addr2.to_s,
+        #        script_type: 'PAYTOADDRESS'
+        #      },
+        #      {
+        #        op_return_data: script,
+        #        amount: '0',
+        #        script_type: 'PAYTOOPRETURN'
+        #      }
+
+        #end
       end
     end
   end
