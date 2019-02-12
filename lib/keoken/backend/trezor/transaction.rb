@@ -19,7 +19,12 @@ module Keoken
           build_inputs([address])
           total, fee = build_fee(:create)
           output_amount = total - fee.to_i
-          create(@inputs, path, address, output_amount, script, xpubs)
+          create(inputs: @inputs,
+                 path: path,
+                 address: address,
+                 output_amount: output_amount,
+                 script: script,
+                 xpubs: xpubs)
         end
 
         # Create the transaction to broadcast in order to send amount between tokens.
@@ -37,7 +42,14 @@ module Keoken
           total, fee = build_fee(:send)
           output_amount = total - (fee.to_i * 2)
           output_amount_to_addr2 = fee.to_i
-          send(@inputs, path, output_amount, address, output_amount_to_addr2, address_dest, script, xpubs)
+          send(inputs: @inputs,
+               path: path,
+               output_amount: output_amount,
+               address: address,
+               output_amount_to_addr2: output_amount_to_addr2,
+               addr2: address_dest,
+               script: script,
+               xpubs: xpubs)
         end
 
         # Create the transaction to broadcast in order to empty the wallet.
@@ -54,22 +66,29 @@ module Keoken
           total, fee = build_fee(:send)
           raise Keoken::Error::NoToken if @tokens.empty?
 
-          send(@inputs, path, total - (fee.to_i * 2), nil, fee.to_i, address_dest, token_script_for_inputs, xpubs)
+          send(inputs: @inputs,
+               path: path,
+               output_amount: total - (fee.to_i * 2),
+               address: nil,
+               output_amount_to_addr2: fee.to_i,
+               addr2: address_dest,
+               script: token_script_for_inputs,
+               xpubs: xpubs)
         end
 
         private
 
-        def create(inputs, path, address, output_amount, script, xpubs)
+        def create(options = {})
           {
-            inputs: build_trezor_inputs(inputs, path, address, xpubs),
+            inputs: build_trezor_inputs(options[:inputs], options[:path], options[:address], options[:xpubs]),
             outputs: [
               {
-                address: Cashaddress.from_legacy(address),
-                amount: output_amount.to_s,
+                address: Cashaddress.from_legacy(options[:address]),
+                amount: options[:output_amount].to_s,
                 script_type: 'PAYTOADDRESS'
               },
               {
-                op_return_data: script,
+                op_return_data: options[:script],
                 amount: '0',
                 script_type: 'PAYTOOPRETURN'
               }
@@ -77,12 +96,12 @@ module Keoken
           }
         end
 
-        def send(inputs, path, output_amount, address, output_amount_to_addr2, addr2, script, xpubs)
-          first_output = if address
+        def send(options = {})
+          first_output = if options[:address]
                            [
                              {
-                               address: Cashaddress.from_legacy(address),
-                               amount: output_amount.to_s,
+                               address: Cashaddress.from_legacy(options[:address]),
+                               amount: options[:output_amount].to_s,
                                script_type: 'PAYTOADDRESS'
                              }
                            ]
@@ -90,16 +109,16 @@ module Keoken
                            []
                          end
           {
-            inputs: build_trezor_inputs(inputs, path, address, xpubs),
+            inputs: build_trezor_inputs(options[:inputs], options[:path], options[:address], options[:xpubs]),
             outputs: first_output.concat(
               [
                 {
-                  address: Cashaddress.from_legacy(addr2),
-                  amount: output_amount_to_addr2.to_s,
+                  address: Cashaddress.from_legacy(options[:addr2]),
+                  amount: options[:output_amount_to_addr2].to_s,
                   script_type: 'PAYTOADDRESS'
                 },
                 {
-                  op_return_data: script,
+                  op_return_data: options[:script],
                   amount: '0',
                   script_type: 'PAYTOOPRETURN'
                 }
