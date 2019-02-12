@@ -45,17 +45,16 @@ module Keoken
         # @param addresses [Array] Addresses that will contain the token and will be emptied.
         # @param address_dest [String] Address to receive the tokens.
         # @param path [Array] Address derivation path.
-        # @param script [String] The token script.
         # @param xpubs [Array] The xpubs corresponding to the multisig address.
         #
         # @return [Keoken::Backend::Trezor::Transaction] A serialized object ready for Trezor signing.
         #
-        def build_for_empty_wallet(addresses, address_dest, path, script, xpubs = [])
+        def build_for_empty_wallet(addresses, address_dest, path, xpubs = [])
           build_inputs(addresses)
           total, fee = build_fee(:send)
-          output_amount = total - (fee.to_i * 2)
-          output_amount_to_addr2 = fee.to_i
-          send(@inputs, path, output_amount, nil, output_amount_to_addr2, address_dest, script, xpubs)
+          raise Keoken::Error::NoToken if @tokens.empty?
+
+          send(@inputs, path, total - (fee.to_i * 2), nil, fee.to_i, address_dest, token_script_for_inputs, xpubs)
         end
 
         private
@@ -92,18 +91,20 @@ module Keoken
                          end
           {
             inputs: build_trezor_inputs(inputs, path, address, xpubs),
-            outputs: first_output.concat([
-              {
-                address: Cashaddress.from_legacy(addr2),
-                amount: output_amount_to_addr2.to_s,
-                script_type: 'PAYTOADDRESS'
-              },
-              {
-                op_return_data: script,
-                amount: '0',
-                script_type: 'PAYTOOPRETURN'
-              }
-            ])
+            outputs: first_output.concat(
+              [
+                {
+                  address: Cashaddress.from_legacy(addr2),
+                  amount: output_amount_to_addr2.to_s,
+                  script_type: 'PAYTOADDRESS'
+                },
+                {
+                  op_return_data: script,
+                  amount: '0',
+                  script_type: 'PAYTOOPRETURN'
+                }
+              ]
+            )
           }
         end
 
@@ -147,6 +148,12 @@ module Keoken
                 }
             }
           end
+        end
+
+        def token_script_for_inputs
+          token = Token.new(id: @tokens.first.id)
+          token.send_amount(@tokens.map(&:amount).inject(:+))
+          token.hex
         end
       end
     end

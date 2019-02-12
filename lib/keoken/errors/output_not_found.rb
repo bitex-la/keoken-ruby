@@ -7,4 +7,3 @@ module Keoken
     end
   end
 end
-

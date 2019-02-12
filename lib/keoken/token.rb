@@ -1,6 +1,6 @@
 module Keoken
   class Token < Parser
-    attr_accessor :data_script, :id
+    attr_accessor :data_script, :id, :amount
 
     # Creates a new token object.
     #
@@ -43,7 +43,6 @@ module Keoken
     #
     def send_amount(amount)
       raise Keoken::Error::IdNotFound unless @id
-      asset_length = Keoken::ASSET_ID_SIZE - @id.to_s.length
       @data_script =
         [
           Keoken::VERSION_NODE,

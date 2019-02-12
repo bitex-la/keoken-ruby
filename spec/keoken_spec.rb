@@ -329,7 +329,6 @@ describe Keoken do
       allow(ENV).to receive(:[]).with('KEOKEN_NODE').and_return('PRODUCTION')
       token = Keoken::Token.new(id: 86)
       token.send_amount(456_342)
-      script = token.hex
       @transaction_token = Keoken::Backend::Trezor::Transaction.new
 
       expect(
@@ -338,7 +337,6 @@ describe Keoken do
            '32tM1kKxnTzcJugmGsavg5MnsJiNZfUUzQ'],
           '32tM1kKxnTzcJugmGsavg5MnsJiNZfUUzQ',
           [44, 145, 0, 0, 0],
-          script,
           ['ypub6WrVGzkKFeNTTppAVe2KkY3yiohKNvFDZm7qAFKBAu8ozm2DYRmwoXwpQUAaEbLkCJmdGaYBLxBUbJcfeLZcwXEtF9neUCDXuWtVyFDApi6',
            'ypub6WtFU3UPzgvu1AJzw9Quw6TgNp7FM5ro2AZwcwmkgP4HvdurTiGRSDYKV4YaofGny96xFykeNxJGgt8SiNwhFnBbdmwyiiLVRxoKWTeQnuB']
         )
@@ -405,7 +403,7 @@ describe Keoken do
                [{:address=>"bitcoincash:pqx3eghuvc7kmc4qkwg0qwfjqyedh3wg8qkwanr9pd",
                  :amount=>"124874",
                  :script_type=>"PAYTOADDRESS"},
-                 {:op_return_data=>"6a0400004b50100000000100000056000000000006f696",
+                 {:op_return_data=>"6a0400004b5010000000010000001100000000000000c8",
                   :amount=>"0",
                   :script_type=>"PAYTOOPRETURN"}
                ]

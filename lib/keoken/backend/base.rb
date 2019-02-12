@@ -1,23 +1,29 @@
 module Keoken
   module Backend
     class Base
-      attr_accessor :inputs, :bitprim_transaction, :total_inputs_amount
+      attr_accessor :inputs, :bitprim_transaction, :total_inputs_amount, :tokens
 
       def initialize
         @inputs = []
+        @tokens = []
         @bitprim_transaction = Keoken::Bitprim::Transaction.new
       end
 
       protected
 
       def build_inputs(addresses)
-        utxos = addresses.map {|address| bitprim_transaction.utxos(address) }.flatten
+        utxos = addresses.map { |address| bitprim_transaction.utxos(address) }.flatten
         @total_inputs_amount = 0
         utxos.each do |utxo|
           txid = utxo['txid']
           transaction = bitprim_transaction.tx(txid)
-          outputs = transaction['vout'].select do |vout|
-            !(vout['scriptPubKey']['addresses'].to_a & addresses).empty?
+          transaction['vout'].each do |vout|
+            if vout['scriptPubKey']['asm'].split.first == 'OP_RETURN'
+              @tokens.push(Token.new(script: vout['scriptPubKey']['hex']))
+            end
+          end
+          outputs = transaction['vout'].reject do |vout|
+            (vout['scriptPubKey']['addresses'].to_a & addresses).empty?
           end
           raise Keoken::Error::OutputNotFound if outputs.empty?
           output = outputs.first
