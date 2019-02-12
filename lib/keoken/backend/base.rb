@@ -17,24 +17,15 @@ module Keoken
         utxos.each do |utxo|
           txid = utxo['txid']
           transaction = bitprim_transaction.tx(txid)
-          transaction['vout'].each do |vout|
-            if vout['scriptPubKey']['asm'].split.first == 'OP_RETURN'
-              @tokens.push(Token.new(script: vout['scriptPubKey']['hex']))
-            end
-          end
-          outputs = transaction['vout'].reject do |vout|
-            (vout['scriptPubKey']['addresses'].to_a & addresses).empty?
-          end
-          raise Keoken::Error::OutputNotFound if outputs.empty?
-          output = outputs.first
-          amount = output['value'].sub!(/\./, '').sub!(/^0+/, '').to_i
+          add_script_token(transaction['vout'])
+          output = output_for_input(transaction['vout'], addresses)
           @inputs.push(
             tx_id: txid,
             position: output['n'],
             input_script: output['scriptPubKey']['hex'],
-            input_amount: amount
+            input_amount: output['amount']
           )
-          @total_inputs_amount += amount
+          @total_inputs_amount += output['amount']
         end
       end
 
@@ -53,6 +44,24 @@ module Keoken
         when :send
           3
         end
+      end
+
+      def add_script_token(outputs)
+        outputs.each do |vout|
+          if vout['scriptPubKey']['asm'].split.first == 'OP_RETURN'
+            @tokens.push(Token.new(script: vout['scriptPubKey']['hex']))
+          end
+        end
+      end
+
+      def output_for_input(outputs, addresses)
+        outputs_in_address = outputs.reject do |vout|
+          (vout['scriptPubKey']['addresses'].to_a & addresses).empty?
+        end
+        raise Keoken::Error::OutputNotFound if outputs_in_address.empty?
+        result = outputs_in_address.first
+        result['amount'] = result['value'].sub!(/\./, '').sub!(/^0+/, '').to_i
+        result
       end
     end
   end
