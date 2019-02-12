@@ -148,26 +148,6 @@ module Keoken
             }
           end
         end
-
-        #def build_outputs_for_sending
-        #  outputs = 
-        #      {
-        #        address: Cashaddress.from_legacy(address),
-        #        amount: output_amount.to_s,
-        #        script_type: 'PAYTOADDRESS'
-        #      },
-        #      {
-        #        address: Cashaddress.from_legacy(addr2),
-        #        amount: output_amount_to_addr2.to_s,
-        #        script_type: 'PAYTOADDRESS'
-        #      },
-        #      {
-        #        op_return_data: script,
-        #        amount: '0',
-        #        script_type: 'PAYTOOPRETURN'
-        #      }
-
-        #end
       end
     end
   end
