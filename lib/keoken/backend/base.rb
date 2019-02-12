@@ -6,26 +6,23 @@ module Keoken
       def initialize
         @inputs = []
         @tokens = []
+        @total_inputs_amount = 0
         @bitprim_transaction = Keoken::Bitprim::Transaction.new
       end
 
       protected
 
       def build_inputs(addresses)
-        utxos = addresses.map { |address| bitprim_transaction.utxos(address) }.flatten
-        @total_inputs_amount = 0
-        utxos.each do |utxo|
-          txid = utxo['txid']
-          transaction = bitprim_transaction.tx(txid)
-          add_script_token(transaction['vout'])
-          output = output_for_input(transaction['vout'], addresses)
-          @inputs.push(
-            tx_id: txid,
-            position: output['n'],
-            input_script: output['scriptPubKey']['hex'],
-            input_amount: output['amount']
-          )
-          @total_inputs_amount += output['amount']
+        addresses.each do |address|
+          @total_inputs_amount =
+            bitprim_transaction.utxos(address).inject(0) do |previous_amount, utxo|
+              txid = utxo['txid']
+              transaction = bitprim_transaction.tx(txid)
+              add_script_token(transaction['vout'])
+              output = output_for_input(txid, transaction['vout'], addresses)
+              @inputs.push(output)
+              previous_amount + output[:input_amount]
+            end
         end
       end
 
@@ -54,14 +51,20 @@ module Keoken
         end
       end
 
-      def output_for_input(outputs, addresses)
-        outputs_in_address = outputs.reject do |vout|
-          (vout['scriptPubKey']['addresses'].to_a & addresses).empty?
+      def output_for_input(txid, outputs, addresses)
+        output = nil
+        outputs.each do |vout|
+          next if (vout['scriptPubKey']['addresses'].to_a & addresses).empty?
+          output =
+            {
+              tx_id: txid,
+              position: vout['n'],
+              input_script: vout['scriptPubKey']['hex'],
+              input_amount: vout['value'].sub!(/\./, '').sub!(/^0+/, '').to_i
+            }
         end
-        raise Keoken::Error::OutputNotFound if outputs_in_address.empty?
-        result = outputs_in_address.first
-        result['amount'] = result['value'].sub!(/\./, '').sub!(/^0+/, '').to_i
-        result
+        raise Keoken::Error::OutputNotFound unless output
+        output
       end
     end
   end
