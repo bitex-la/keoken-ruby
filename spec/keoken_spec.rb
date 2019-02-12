@@ -327,8 +327,6 @@ describe Keoken do
     it 'empty the wallet' do
       mock_requests
       allow(ENV).to receive(:[]).with('KEOKEN_NODE').and_return('PRODUCTION')
-      token = Keoken::Token.new(id: 86)
-      token.send_amount(456_342)
       @transaction_token = Keoken::Backend::Trezor::Transaction.new
 
       expect(
